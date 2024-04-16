@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,7 @@ using Microsoft.OpenApi.Models;
 using UserStorageService.AsyncDataServices;
 using UserStorageService.Data;
 using UserStorageService.Event;
+using UserStorageService.GRPC;
 using UserStorageService.Interfaces;
 using UserStorageService.Repositories;
 
@@ -41,6 +44,8 @@ namespace UserStorageService
 
             services.AddHostedService<MessageBusSubscriber>();
 
+            services.AddGrpc();
+
             services.AddSingleton<IEventProcessor, EventProcessor>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddSwaggerGen(c =>
@@ -64,10 +69,18 @@ namespace UserStorageService
             app.UseRouting();
 
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                endpoints.MapGrpcService<UserRegistrationService>();
+
+                endpoints.MapGet("/Protos/validateuser.proto", async context =>
+                {
+                    await context.Response.WriteAsync(File.ReadAllText("Protos/validateuser.proto"));
+                });
             });
         }
     }

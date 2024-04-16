@@ -29,6 +29,12 @@ namespace UserStorageService.Repositories
             return _context.Users.ToList();
         }
 
+        public bool UserExists(Guid Id)
+        {
+            var result = _context.Users.Any(u => u.Id == Id);
+            return result;
+        }
+
         public bool SaveChange()
         {
             return (_context.SaveChanges() >= 0);

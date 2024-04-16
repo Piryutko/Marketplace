@@ -10,6 +10,7 @@ using UserRegistrationService.Repositories;
 using AutoMapper;
 using UserRegistrationService.Dtos;
 using UserRegistrationService.Enums;
+using Grpc.Net.Client;
 
 namespace UserRegistrationService.Controllers
 {
@@ -74,6 +75,19 @@ namespace UserRegistrationService.Controllers
                  return BadRequest($"Вы не прошли регистрацию! Ошибка: {ex.Message}");
             }
             
+        }
+
+        [HttpGet("GetResultRegistrationUser/{id}")]
+        public string GetResultRegistrationUser(string id)
+        {
+            var channel = GrpcChannel.ForAddress("https://localhost:6001");
+            var client = new GrpcUserService.GrpcUserServiceClient(channel);
+
+            var request = new UserRequest() {Id = id};
+
+            var userTest = client.UserExists(request);
+
+            return userTest.Result;
         }
 
         

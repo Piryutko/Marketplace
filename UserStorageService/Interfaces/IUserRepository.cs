@@ -13,6 +13,8 @@ namespace UserStorageService.Interfaces
 
         public bool SaveChange();
 
+        public bool UserExists(Guid Id);
+
         IEnumerable<User> GetAllUsers();
     }
 }

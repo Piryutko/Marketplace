@@ -34,5 +34,13 @@ namespace UserStorageService.Controllers
         {
             return _userRepository.GetAllUsers();
         }
+
+        [HttpGet("GetUser{id}")]
+        public bool UserExists(Guid id)
+        {
+            return _userRepository.UserExists(id);
+        }
+
+
     }
 }

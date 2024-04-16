@@ -43,6 +43,8 @@ namespace UserRegistrationService
 
             services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
+            // services.AddScoped<IUserDataClient, UserDataClient>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UserRegistrationService", Version = "v1" });
