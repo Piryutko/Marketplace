@@ -21,35 +21,17 @@ namespace UserRegistrationService.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IMessageBusClient _messageBusClient;
+        private readonly IUserClient _userClient;
 
-        public UserController(IUserRepository userRepository, IMapper mapper, IMessageBusClient messageBusClient)
+        public UserController(IUserRepository userRepository, IMapper mapper, 
+        IMessageBusClient messageBusClient, IUserClient userClient)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _messageBusClient = messageBusClient;
+            _userClient = userClient;
         }
         
-
-        [HttpGet("GetAllUsers")]
-        public ActionResult<IEnumerable<User>> GetAllUsers()
-        {
-            Console.WriteLine("---> Get All Users");
-
-            return Ok(_userRepository.GetAllUsers());
-        }
-
-        [HttpPost("TryCreateUser")]
-        public ActionResult TryCreateUser(User user)
-        {
-            if(_userRepository.TryCreateUser(user))
-            {
-                return Ok("Вы успешно зарегистрировались!");
-            }
-            else
-            {
-                return BadRequest("Вы не прошли регистрацию! Проверьте правильность вводимых данных");
-            }
-        }
 
         [HttpPost("SendMessageTryCreateUser")]
         public ActionResult CreateUser(User user)
@@ -62,7 +44,16 @@ namespace UserRegistrationService.Controllers
                 userPublishedDto.Event = UserEvents.User_Published;
                 _messageBusClient.PublishNewUser(userPublishedDto);
 
-                return Ok("Вы успешно зарегистрировались!");
+                
+                if(_userClient.GetResultRequestById(user.Id.ToString(), out string result))
+                {
+                    if(result == "True")
+                    {
+                        return Ok("Вы успешно зарегистрировались!");
+                    }
+                }
+
+                return BadRequest("Вы не прошли регистрацию! Обратитесь в техническую поддержку магазина");
             }
             else
             {
@@ -72,24 +63,10 @@ namespace UserRegistrationService.Controllers
             }
             catch (Exception ex)
             {
-                 return BadRequest($"Вы не прошли регистрацию! Ошибка: {ex.Message}");
+                 return BadRequest($"Вы не прошли регистрацию! Обратитесь в техническую поддержку магазина ошибка: {ex.Message}");
             }
             
         }
 
-        [HttpGet("GetResultRegistrationUser/{id}")]
-        public string GetResultRegistrationUser(string id)
-        {
-            var channel = GrpcChannel.ForAddress("https://localhost:6001");
-            var client = new GrpcUserService.GrpcUserServiceClient(channel);
-
-            var request = new UserRequest() {Id = id};
-
-            var userTest = client.UserExists(request);
-
-            return userTest.Result;
-        }
-
-        
     }
 }
