@@ -58,9 +58,9 @@ namespace UserStorageService.AsyncDataServices
                 Console.WriteLine("--> Event Received!");
 
                 var body = ea.Body;
-                var notificationMEssage = Encoding.UTF8.GetString(body.ToArray());
+                var notificationMessage = Encoding.UTF8.GetString(body.ToArray());
 
-                _eventProcessor.ProcessEvent(notificationMEssage);
+                _eventProcessor.ProcessEvent(notificationMessage);
             };
 
             _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);

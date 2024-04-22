@@ -19,9 +19,12 @@ namespace UserStorageService.Repositories
 
         public bool AddUser(User user)
         {
-            _context.Users.Add(user);
-
-            return SaveChange();
+            if(CheckingUserByNickname(user) && CheckingUserByEmail(user))
+            {
+                _context.Users.Add(user);
+                return SaveChange();
+            }
+            return false;
         }
 
         public IEnumerable<User> GetAllUsers()
@@ -33,6 +36,27 @@ namespace UserStorageService.Repositories
         {
             var result = _context.Users.Any(u => u.Id == Id);
             return result;
+        }
+        
+        public bool CheckingUserByNickname(User User)
+        {
+            if(GetAllUsers().Any(u => u.Nickname == User.Nickname))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool CheckingUserByEmail(User User)
+        {
+            if(GetAllUsers().Any(u => u.Email == User.Email))
+            {
+                return false;
+            }
+
+            return true;
+
         }
 
         public bool SaveChange()

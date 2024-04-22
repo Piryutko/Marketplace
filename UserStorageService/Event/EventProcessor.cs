@@ -1,3 +1,4 @@
+using System.Runtime.ExceptionServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,8 +68,14 @@ namespace UserStorageService.Event
                 {
                     var user = _mapper.Map<User>(userPublishedDto);
 
-                    repo.AddUser(user);
-                    repo.SaveChange();
+                    if(repo.AddUser(user))
+                    {
+                        repo.SaveChange();
+                    }
+                    else
+                    {
+                        throw new ArgumentException();
+                    }
                     
                     Console.WriteLine("Success!");
                 }

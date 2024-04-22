@@ -53,7 +53,7 @@ namespace UserRegistrationService.Controllers
                     }
                 }
 
-                return BadRequest("Вы не прошли регистрацию! Обратитесь в техническую поддержку магазина");
+                return BadRequest("Вы не прошли регистрацию! Никнейм или почта уже занят другим пользователем");
             }
             else
             {
@@ -63,7 +63,7 @@ namespace UserRegistrationService.Controllers
             }
             catch (Exception ex)
             {
-                 return BadRequest($"Вы не прошли регистрацию! Обратитесь в техническую поддержку магазина ошибка: {ex.Message}");
+                 return BadRequest($"Вы не прошли регистрацию! Обратитесь в техническую поддержку магазина.");
             }
             
         }

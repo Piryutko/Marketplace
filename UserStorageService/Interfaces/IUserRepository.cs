@@ -15,6 +15,10 @@ namespace UserStorageService.Interfaces
 
         public bool UserExists(Guid Id);
 
+        public bool CheckingUserByNickname(User User);
+
+        public bool CheckingUserByEmail(User User);
+
         IEnumerable<User> GetAllUsers();
     }
 }
