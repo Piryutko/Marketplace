@@ -35,10 +35,55 @@ namespace UserStorageService.Controllers
             return _userRepository.GetAllUsers();
         }
 
-        [HttpGet("GetUser{id}")]
+        [HttpGet("UserExists/{id}")]
         public bool UserExists(Guid id)
         {
             return _userRepository.UserExists(id);
+        }
+
+        [HttpGet("GetUserByNickname/{Nickname}")]
+        public User GetUserByNickname(string Nickname)
+        {
+           var result = _userRepository.TryFindUserByNickName(Nickname, out User user);
+
+           if(result != null)
+           {
+                return user;
+           }
+
+           return user;
+        }
+
+        [HttpGet("GetUserByEmail/{Email}")]
+        public User GetUserByEmail(string Email)
+        {
+           var result = _userRepository.TryFindUserByEmail(Email, out User user);
+
+           if(result != null)
+           {
+                return user;
+           }
+
+           return user;
+        }
+
+        [HttpGet("GetUserById/{id}")]
+        public User GetUserById(Guid Id)
+        {
+           var result = _userRepository.TryFindUserById(Id, out User user);
+
+           if(result != null)
+           {
+                return user;
+           }
+
+           return user;
+        }
+
+        [HttpGet("DeleteUser/{id}")]
+        public bool DeleteUser(Guid Id)
+        {
+           return _userRepository.TryDeleteUserById(Id);
         }
 
 
