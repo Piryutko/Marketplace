@@ -80,8 +80,8 @@ namespace UserStorageService.Controllers
            return user;
         }
 
-        [HttpGet("DeleteUser/{id}")]
-        public bool DeleteUser(Guid Id)
+        [HttpGet("DeleteUserById/{id}")]
+        public bool DeleteUserById(Guid Id)
         {
            return _userRepository.TryDeleteUserById(Id);
         }
