@@ -48,6 +48,16 @@ namespace UserStorageService.Repositories
             return true;
         }
 
+        public bool CheckingUserByNickname(string Nickname)
+        {
+            if(GetAllUsers().Any(u => u.Nickname == Nickname))
+            {
+                return true;
+            }
+
+            return true;
+        }
+
         public bool CheckingUserByEmail(User User)
         {
             if(GetAllUsers().Any(u => u.Email == User.Email))

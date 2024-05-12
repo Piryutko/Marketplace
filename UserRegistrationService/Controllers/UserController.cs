@@ -49,7 +49,7 @@ namespace UserRegistrationService.Controllers
                 {
                     if(result == "True")
                     {
-                        return Ok("Вы успешно зарегистрировались!");
+                        return Ok(new Response {Status = "Успешно", Message = "Вы зарегистрировались!"});
                     }
                 }
 

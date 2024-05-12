@@ -17,6 +17,8 @@ namespace UserStorageService.Interfaces
 
         public bool CheckingUserByNickname(User User);
 
+        public bool CheckingUserByNickname(string Nickname);
+
         public bool CheckingUserByEmail(User User);
 
         public bool TryFindUserByNickName(string name, out User User);

@@ -27,5 +27,15 @@ namespace UserStorageService.GRPC
 
             return Task.FromResult(response);
         }
+
+        public override Task<ShopResponse> CheckingUserByNickname(ShopRequest request, ServerCallContext context)
+        {
+            var result = _repository.CheckingUserByNickname(request.Nickname);
+            
+            var response = new ShopResponse(){Result = result.ToString()};
+
+            return Task.FromResult(response);
+        }
+
     }
 }

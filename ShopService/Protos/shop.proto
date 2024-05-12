@@ -3,16 +3,7 @@ syntax = "proto3";
 option csharp_namespace = "UserStorageService";
 
 service GrpcUserService{
-    rpc UserExists (UserRequest) returns (UserResponse);
     rpc CheckingUserByNickname (ShopRequest) returns (ShopResponse);
-}
-
-message UserRequest{
-    string Id = 1;
-}
-
-message UserResponse{
-    string result = 1;
 }
 
 message ShopRequest{

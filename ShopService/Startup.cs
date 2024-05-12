@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ShopService.GrpcShopClient;
+using ShopService.Interfaces;
 
 namespace ShopService
 {
@@ -26,7 +28,8 @@ namespace ShopService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            
+            services.AddScoped<IShopClient, ShopClient>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

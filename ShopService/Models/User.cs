@@ -9,13 +9,7 @@ namespace ShopService.Models
     {
         public Guid Id { get; set; }
 
-        public string Name { get; set; }
-
-        public string Surname { get; set; }
-
         public string Nickname { get; set;}
-
-        public DateTime Datebirth { get;set; }
 
         public string Email { get; set; }
     }
