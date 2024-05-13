@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ShopService.Interfaces;
+using ShopService.Models;
+using ShopService.Repositories;
 
 namespace ShopService.Controllers
 {
@@ -12,10 +14,12 @@ namespace ShopService.Controllers
     public class TestApiController : ControllerBase
     {
         private readonly IShopClient _shopClient;
+        private readonly IItemRepository _itemRepository;
 
-        public TestApiController(IShopClient shopClient)
+        public TestApiController(IShopClient shopClient, IItemRepository itemRepository)
         {
             _shopClient = shopClient;
+            _itemRepository = itemRepository;
         }
 
         [HttpGet("test/{name}")]
@@ -30,6 +34,15 @@ namespace ShopService.Controllers
 
            return BadRequest();
         }
+
+        [HttpGet("testRequestAllItems/{id}")]
+        public ActionResult<List<Item>> TestRequestAllItems(int id)
+        {
+           var result = _itemRepository.GetItems(id);
+
+           return Ok(result);
+        }
+
 
 
     }

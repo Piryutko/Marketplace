@@ -7,6 +7,10 @@ namespace ShopService.Models
 {
     public class Order
     {
+        public string UserNickname { get; set; }
         
+        public List<Item> Items { get; set; }
+        
+        public decimal AmountPurchases {get; set; }
     }
 }
