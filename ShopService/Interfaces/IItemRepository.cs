@@ -9,9 +9,11 @@ namespace ShopService.Interfaces
 {
     public interface IItemRepository
     {
-        public List<Item> GetItems(int id);
+        public IEnumerable<Item> GetItemsByCategory(int id);
 
-        public List<Item> SortItemPrice(Category category);
+        public IEnumerable<Item> SortItemPrice(int category);
+
+        public IEnumerable<Item> SortItemPriceByDescending(int category);
 
     }
 }

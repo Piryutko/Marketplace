@@ -36,9 +36,9 @@ namespace ShopService.Controllers
         }
 
         [HttpGet("testRequestAllItems/{id}")]
-        public ActionResult<List<Item>> TestRequestAllItems(int id)
+        public ActionResult<List<Item>> TestRequestAllItems(int idCategory)
         {
-           var result = _itemRepository.GetItems(id);
+           var result = _itemRepository.GetItemsByCategory(idCategory);
 
            return Ok(result);
         }
