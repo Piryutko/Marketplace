@@ -13,18 +13,18 @@ namespace ItemService.Models
         {
             try
             {
-            Ensure.That(name).IsNotNullOrWhiteSpace();
-            Ensure.String.Matches(name, @"^[a-zA-Z]+$");
+                Ensure.That(name).IsNotNullOrWhiteSpace();
+                Ensure.String.Matches(name, @"^[a-zA-Z]+$");
 
-            Id = Guid.NewGuid();
+                Id = Guid.NewGuid();
 
-            Category = category;
+                Category = category;
 
-            Ensure.That(cost).IsGt(0);
-            Cost = cost;
+                Ensure.That(cost).IsGt(0);
+                Cost = cost;
 
-            Ensure.That(quantity).IsGt(0);
-            Quantity = quantity;
+                Ensure.That(quantity).IsGt(0);
+                Quantity = quantity;
             }
             catch (Exception ex)
             {
@@ -36,14 +36,24 @@ namespace ItemService.Models
             }
         }
 
-        public string Name { get; set; }
-        
-        public Guid Id { get; set; }
+        public string Name { get; }
 
-        public Category Category { get; set; }
+        public Guid Id { get; }
 
-        public decimal Cost { get; set; }
+        public Category Category { get; }
 
-        public int Quantity {get; set; }
+        public decimal Cost { get; }
+
+        public int Quantity { get; private set; }
+
+        public bool TryReduceQuantity(int value)
+        {
+            if(Quantity != 0)
+            {
+                Quantity = Quantity - value;
+                return true;
+            }
+            return false;
+        }
     }
 }
