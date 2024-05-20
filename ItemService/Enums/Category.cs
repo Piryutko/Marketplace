@@ -1,4 +1,4 @@
-namespace ShopService.Enums
+namespace ItemService.Enums
 {
     public enum Category
     {
@@ -6,6 +6,5 @@ namespace ShopService.Enums
         clothes = 2,
         flowers = 3,
         householdGoods = 4
-
     }
 }
