@@ -15,6 +15,7 @@ namespace ItemService.Models
             {
                 Ensure.That(name).IsNotNullOrWhiteSpace();
                 Ensure.String.Matches(name, @"^[a-zA-Z]+$");
+                Name = name;
 
                 Id = Guid.NewGuid();
 
@@ -36,15 +37,15 @@ namespace ItemService.Models
             }
         }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public Guid Id { get; }
+        public Guid Id { get; set; }
 
-        public Category Category { get; }
+        public Category Category { get; set; }
 
-        public decimal Cost { get; }
+        public decimal Cost { get; set;}
 
-        public int Quantity { get; private set; }
+        public int Quantity { get; set; }
 
         public bool TryReduceQuantity(int value)
         {

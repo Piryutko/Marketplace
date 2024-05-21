@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ItemService.Data;
+using ItemService.Interfaces;
+using ItemService.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +32,7 @@ namespace ItemService
         {
 
             services.AddControllers();
+            services.AddScoped<IItemRepository, ItemRepository>();
 
             services.AddDbContext<AppDbContext>(opt =>
             opt.UseInMemoryDatabase("InMemory"));

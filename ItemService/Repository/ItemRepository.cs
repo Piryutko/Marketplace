@@ -28,7 +28,8 @@ namespace ItemService.Repository
 
         public IEnumerable<Item> GetItemsByCategory(Category category)
         {
-            return _context.Items.Where(i => i.Category == category);
+            var test = _context.Items.Where(i => i.Category == category);
+            return test;
         }
 
         public IEnumerable<Item> GetItemsSortByCost(Category category)
@@ -41,24 +42,40 @@ namespace ItemService.Repository
             return _context.Items.OrderByDescending(i => i.Cost);
         }
 
-        public bool TryAddItem(string name, Category category, decimal cost, int quantity)
+        // public bool TryAddItem(string name, Category category, decimal cost, int quantity)
+        // {
+        //     try
+        //     {
+        //     var item = new Item(name, category, cost, quantity);
+
+        //     if(item.Id != Guid.Empty)
+        //     {   
+        //         _context.Add(item);
+        //         _context.SaveChanges();
+                
+        //         return true;
+        //     }
+        //         return false;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Console.WriteLine($"Exception {ex}");
+        //         return false;
+        //     }
+        // }
+
+        public bool TryAddItem(Item item)
         {
             try
             {
-            var item = new Item(name, category, cost, quantity);
-
-            if(item.Id != Guid.Empty)
-            {   
-                _context.Add(item);
-                _context.SaveChanges();
-                return true;
+            _context.Items.Add(item);
+            _context.SaveChanges();
+            return true;
             }
-                return false;
-            }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                Console.WriteLine($"Exception {ex}");
-                return false;
+            Console.WriteLine(ex.Message);
+            return false;
             }
         }
 
