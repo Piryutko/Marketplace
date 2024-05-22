@@ -15,9 +15,9 @@ namespace ItemService.Interfaces
 
         public IEnumerable<Item> GetItemsByCategory(Category category);
 
-        public IEnumerable<Item> GetItemsSortByCost(Category category);
+        public IEnumerable<Item> GetItemsCategorySortByCost(Category category);
 
-        public IEnumerable<Item> GetItemsSortByCostDescending(Category category);
+        public IEnumerable<Item> GetItemsCategorySortByCostDescending(Category category);
 
         public bool TryDeleteItem(Guid id);
 

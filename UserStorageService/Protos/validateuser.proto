@@ -6,8 +6,6 @@ service GrpcUserService{
     rpc UserExists (UserRequest) returns (UserResponse);
     rpc CheckingUserByNickname (ShopRequest) returns (ShopResponse);
     
-    //rpc Cheking User Return Email
-    //rpc Cheking User Return Id
 }
 
 message UserRequest{

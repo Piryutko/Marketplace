@@ -32,37 +32,15 @@ namespace ItemService.Repository
             return test;
         }
 
-        public IEnumerable<Item> GetItemsSortByCost(Category category)
+        public IEnumerable<Item> GetItemsCategorySortByCost(Category category)
         {
-            return _context.Items.OrderBy(i => i.Cost);
+            return _context.Items.Where(i => i.Category == category).OrderBy(i => i.Cost);
         }
 
-        public IEnumerable<Item> GetItemsSortByCostDescending(Category category)
+        public IEnumerable<Item> GetItemsCategorySortByCostDescending(Category category)
         {
             return _context.Items.OrderByDescending(i => i.Cost);
         }
-
-        // public bool TryAddItem(string name, Category category, decimal cost, int quantity)
-        // {
-        //     try
-        //     {
-        //     var item = new Item(name, category, cost, quantity);
-
-        //     if(item.Id != Guid.Empty)
-        //     {   
-        //         _context.Add(item);
-        //         _context.SaveChanges();
-                
-        //         return true;
-        //     }
-        //         return false;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine($"Exception {ex}");
-        //         return false;
-        //     }
-        // }
 
         public bool TryAddItem(Item item)
         {
@@ -86,6 +64,7 @@ namespace ItemService.Repository
             if(result == true)
             {
                 var item = _context.Items.FirstOrDefault(i => i.Id == id);
+
                 _context.Items.Remove(item);
                 _context.SaveChanges();
                 return true;

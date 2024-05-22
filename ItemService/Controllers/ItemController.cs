@@ -36,6 +36,31 @@ namespace ItemService.Controllers
             return Ok(_itemRepository.GetItemsByCategory(category));
         }
 
+        [HttpGet("GetItemsSortByCost")] 
+        public ActionResult GetItemsSortByCost(Category category)
+        {
+            return Ok(_itemRepository.GetItemsCategorySortByCost(category));
+        }
+
+        [HttpGet("GetItemsCategorySortByCostDescending")] 
+        public ActionResult GetItemsCategorySortByCostDescending(Category category)
+        {
+            return Ok(_itemRepository.GetItemsCategorySortByCostDescending(category));
+        }
+
+        [HttpDelete("TryDeleteItem/{id}")]
+        public ActionResult TryDeleteItem(Guid id)
+        {
+            return Ok(_itemRepository.TryDeleteItem(id));
+        }
+
+        [HttpPut("BuyItem/{id},{value}")] 
+        public ActionResult BuyItem(Guid id,int value)
+        {
+            return Ok(_itemRepository.BuyItem(id,value));
+        }
+
+
 
 
 
