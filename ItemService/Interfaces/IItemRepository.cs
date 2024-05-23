@@ -13,7 +13,7 @@ namespace ItemService.Interfaces
 
         public bool TryAddItem(Item item);
 
-        public IEnumerable<Item> GetItemsByCategory(Category category);
+        public IList<Item> GetItemsByCategory(Category category);
 
         public IEnumerable<Item> GetItemsCategorySortByCost(Category category);
 

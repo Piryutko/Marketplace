@@ -33,6 +33,7 @@ namespace ItemService
 
             services.AddControllers();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddGrpc();
 
             services.AddDbContext<AppDbContext>(opt =>
             opt.UseInMemoryDatabase("InMemory"));
@@ -62,6 +63,12 @@ namespace ItemService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                // endpoints.MapGrpcService<UserRegistrationService>();
+
+                // endpoints.MapGet("/Protos/validateuser.proto", async context =>
+                // {
+                //     await context.Response.WriteAsync(File.ReadAllText("Protos/validateuser.proto"));
+                // });
             });
         }
     }

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "ItemService";
+
+service GrpcUserService{
+    rpc GetItemsByCategory (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
+}
+
+message GetItemsByCategoryRequest{
+    int32 CategoryId = 1;
+}
+
+message GetItemsByCategoryResponse{
+    repeated GrpcItemModels Items = 1;
+}
+
+message GrpcItemModels
+{
+    string Name = 1;
+    string Id = 2;
+    int32 Category = 3;
+    double Cost = 4;
+    int32 Quantity = 5;
+}

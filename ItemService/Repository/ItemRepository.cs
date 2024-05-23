@@ -26,10 +26,10 @@ namespace ItemService.Repository
             return result;
         }
 
-        public IEnumerable<Item> GetItemsByCategory(Category category)
+        public IList<Item> GetItemsByCategory(Category category)
         {
-            var test = _context.Items.Where(i => i.Category == category);
-            return test;
+            var items = _context.Items.Where(i => i.Category == category).ToList();
+            return items;
         }
 
         public IEnumerable<Item> GetItemsCategorySortByCost(Category category)
