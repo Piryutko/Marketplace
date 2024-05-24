@@ -34,6 +34,7 @@ namespace ItemService
             services.AddControllers();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddGrpc();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddDbContext<AppDbContext>(opt =>
             opt.UseInMemoryDatabase("InMemory"));
