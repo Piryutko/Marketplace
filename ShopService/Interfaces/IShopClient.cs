@@ -11,5 +11,9 @@ namespace ShopService.Interfaces
         public bool GetResultRequestByNickname(string nickname, out string result);
 
         public IEnumerable<Item> GetItemsByCategory(int categoryId);
+
+        public IEnumerable<Item> GetItemsCategorySortByCost(int categoryId);
+
+        public IEnumerable<Item> GetItemsCategorySortByCostDescending(int categoryId);
     }
 }

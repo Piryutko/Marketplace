@@ -20,7 +20,12 @@ namespace ItemService.Repository
         public bool BuyItem(Guid id, int value)
         {
             var item = _context.Items.FirstOrDefault(i => i.Id == id);
-            var result = item.TryReduceQuantity(value);
+            var result = false;
+
+            if (item != null)
+            {
+                result = item.TryReduceQuantity(value);
+            }
             
             _context.SaveChanges();
             return result;

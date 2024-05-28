@@ -68,7 +68,7 @@ namespace ItemService
             {
                 endpoints.MapControllers();
 
-                endpoints.MapGrpcService<ItemServiceTest>();
+                endpoints.MapGrpcService<ItemServer>();
 
                 endpoints.MapGet("/Protos/itemservice.proto", async context =>
                 {

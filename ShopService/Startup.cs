@@ -34,7 +34,6 @@ namespace ShopService
             services.AddDbContext<AppDbContext>(opt =>
              opt.UseInMemoryDatabase("InMem"));
             
-            services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IShopClient, ShopClient>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

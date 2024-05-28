@@ -9,8 +9,6 @@ namespace ItemService.Interfaces
 {
     public interface IItemRepository
     {
-        // public bool TryAddItem(string name, Category category, decimal cost, int quantity);
-
         public bool TryAddItem(Item item);
 
         public IList<Item> GetItemsByCategory(Category category);

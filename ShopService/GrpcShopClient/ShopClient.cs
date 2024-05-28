@@ -65,7 +65,49 @@ namespace ShopService.GrpcShopClient
             }
         }
 
-        private bool TryConnectionUserStorageServer(out GrpcUserService.GrpcUserServiceClient client)
+        public IEnumerable<Item> GetItemsCategorySortByCost(int categoryId)
+        {
+            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
+
+            if (isConnection)
+            {
+                var request = new GetItemsByCategoryRequest(){CategoryId = categoryId};
+
+                var itemsResponse = client.GetItemsCategorySortByCost(request);
+
+                var items = _mapper.Map<IEnumerable<Item>>(itemsResponse.Items);
+
+                return items;
+            }
+            else
+            {
+                var testList = new List<Item>();
+                return testList;
+            }
+        }
+
+        public IEnumerable<Item> GetItemsCategorySortByCostDescending(int categoryId)
+        {
+            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
+
+            if (isConnection)
+            {
+                var request = new GetItemsByCategoryRequest(){CategoryId = categoryId};
+
+                var itemsResponse = client.GetItemsCategorySortByCostDescending(request);
+
+                var items = _mapper.Map<IEnumerable<Item>>(itemsResponse.Items);
+
+                return items;
+            }
+            else
+            {
+                var testList = new List<Item>();
+                return testList;
+            }
+        }
+
+        private bool TryConnectionUserStorageServer(out GrpcUserService.GrpcUserServiceClient client) //Объединить с методом TryConnectionItemServer
         {
             try
             {

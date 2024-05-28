@@ -9,38 +9,35 @@ using ShopService.Models;
 
 namespace ShopService.Repositories
 {
-    public class ItemRepository : IItemRepository
-    {
-        private readonly AppDbContext _context;
+    // public class ItemRepository : IItemRepository
+    // {
+    //     private readonly AppDbContext _context;
 
-        public ItemRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+    //     public ItemRepository(AppDbContext context)
+    //     {
+    //         _context = context;
+    //     }
 
-        public IEnumerable<Item> GetItemsByCategory(int category)
-        {
-            //тут будет логика по работе с БД
+    //     public IEnumerable<Item> GetItemsByCategory(int category)
+    //     {
+    //         var result = _context.Items.ToList().Where(i => i.Category == (Category)category);
 
-            var result = _context.Items.ToList().Where(i => i.Category == (Category)category);
+    //         return result;
+    //     }
 
-            return result;
-        }
+    //     public IEnumerable<Item> SortItemPrice(int category)
+    //     {
+    //         var result = _context.Items.OrderBy(i => i.Cost);
 
-        public IEnumerable<Item> SortItemPrice(int category)
-        {
-            //тут будет логика по работе с БД локально затем продуктивно
-            var result = _context.Items.OrderBy(i => i.Cost);
+    //         return result;
+    //     }
 
-            return result;
-        }
+    //     public IEnumerable<Item> SortItemPriceByDescending(int category)
+    //     {
+    //         var result = _context.Items.OrderByDescending(i => i.Cost);
 
-        public IEnumerable<Item> SortItemPriceByDescending(int category)
-        {
-            var result = _context.Items.OrderByDescending(i => i.Cost);
+    //         return result;
 
-            return result;
-
-        }
-    }
+    //     }
+    // }
 }

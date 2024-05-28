@@ -3,8 +3,12 @@ syntax = "proto3";
 option csharp_namespace = "UserStorageService";
 
 service GrpcUserService{
+
     rpc CheckingUserByNickname (ShopRequest) returns (ShopResponse);
     rpc GetItemsByCategory (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
+    rpc GetItemsCategorySortByCost (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
+    rpc GetItemsCategorySortByCostDescending (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
+    rpc BuyItems (BuyItemsRequest) returns (BuyItemsResponse);
 }
 
 message ShopRequest{
@@ -12,6 +16,15 @@ message ShopRequest{
 }
 
 message ShopResponse{
+    string Result = 1;
+}
+
+message BuyItemsRequest{
+    string ItemsId = 1;
+    int32 Quantity = 2;
+}
+
+message BuyItemsResponse{
     string Result = 1;
 }
 

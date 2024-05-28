@@ -12,7 +12,7 @@ namespace ShopService.Interfaces
 
         public Order AddUserInPayment();
 
-        public bool TryDeleteItemInCart(int numberItem);
+        public bool TryDeleteItemInCart(Guid id);
 
         public bool TryDeleteAllItemInCart();
 

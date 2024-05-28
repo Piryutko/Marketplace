@@ -19,7 +19,7 @@ namespace ShopService.Repositories
 
         public void AddToCart(int id)
         {
-            //логика по GRPC по передаче Id товара
+            throw new NotImplementedException();
         }
 
         public Order AddUserInPayment()
@@ -42,7 +42,7 @@ namespace ShopService.Repositories
             throw new NotImplementedException();
         }
 
-        public bool TryDeleteItemInCart(int numberItem)
+        public bool TryDeleteItemInCart(Guid id)
         {
             throw new NotImplementedException();
         }
