@@ -7,14 +7,16 @@ using ShopService.Enums;
 namespace ShopService.Models
 {
     public class Item
-    {
-        public int Id { get; set; }
-        
+    {   
         public string Name { get; set; }
+
+        public Guid Id { get; set; }
         
         public Category Category { get; set; }
 
         public decimal Cost {get; set; }
+
+        public int Quantity { get; set; }
         
     }
 }

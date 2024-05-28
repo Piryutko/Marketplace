@@ -36,6 +36,8 @@ namespace ShopService
             
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IShopClient, ShopClient>();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddControllers();
             services.AddSwaggerGen(c =>

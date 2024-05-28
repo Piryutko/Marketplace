@@ -4,7 +4,7 @@ option csharp_namespace = "UserStorageService";
 
 service GrpcUserService{
     rpc CheckingUserByNickname (ShopRequest) returns (ShopResponse);
-
+    rpc GetItemsByCategory (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
 }
 
 message ShopRequest{
@@ -13,4 +13,21 @@ message ShopRequest{
 
 message ShopResponse{
     string Result = 1;
+}
+
+message GetItemsByCategoryRequest{
+    int32 CategoryId = 1;
+}
+
+message GetItemsByCategoryResponse{
+    repeated GrpcItemModels Items = 1;
+}
+
+message GrpcItemModels
+{
+    string Name = 1;
+    string Id = 2;
+    int32 Category = 3;
+    double Cost = 4;
+    int32 Quantity = 5;
 }

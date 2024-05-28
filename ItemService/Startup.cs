@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ItemService.Data;
+using ItemService.GRPC;
 using ItemService.Interfaces;
 using ItemService.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -64,12 +67,13 @@ namespace ItemService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                // endpoints.MapGrpcService<UserRegistrationService>();
 
-                // endpoints.MapGet("/Protos/validateuser.proto", async context =>
-                // {
-                //     await context.Response.WriteAsync(File.ReadAllText("Protos/validateuser.proto"));
-                // });
+                endpoints.MapGrpcService<ItemServiceTest>();
+
+                endpoints.MapGet("/Protos/itemservice.proto", async context =>
+                {
+                    await context.Response.WriteAsync(File.ReadAllText("Protos/itemservice.proto"));
+                });
             });
         }
     }

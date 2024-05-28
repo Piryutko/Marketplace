@@ -22,8 +22,8 @@ namespace ShopService.Controllers
             _itemRepository = itemRepository;
         }
 
-        [HttpGet("test/{name}")]
-        public ActionResult TestRequest(string name)
+        [HttpGet("CheckNickname/{name}")]
+        public ActionResult CheckNickname(string name)
         {
            var testResult = _shopClient.GetResultRequestByNickname(name, out string result);
 
@@ -35,12 +35,13 @@ namespace ShopService.Controllers
            return BadRequest();
         }
 
-        [HttpGet("testRequestAllItems/{id}")]
-        public ActionResult<List<Item>> TestRequestAllItems(int idCategory)
+        [HttpGet("testRequestAllItems")]
+        public ActionResult<IEnumerable<Item>> TestRequestAllItems(int idCategory)
         {
-           var result = _itemRepository.GetItemsByCategory(idCategory);
+           var result = _shopClient.GetItemsByCategory(idCategory);
 
            return Ok(result);
+           
         }
 
 
