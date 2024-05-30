@@ -21,6 +21,8 @@ namespace ItemService.GRPC
 
         }
 
+        const int _MINIMALVALUE = 0;
+
         public override Task<GetItemsByCategoryResponse> GetItemsByCategory(GetItemsByCategoryRequest request,
          ServerCallContext context)
         {
@@ -69,20 +71,22 @@ namespace ItemService.GRPC
         public override Task<BuyItemsResponse> BuyItems(BuyItemsRequest request,
         ServerCallContext context)
         {
-            var tryParse = Guid.TryParse(request.ItemsId, out var itemsId);
+            var value = Guid.TryParse(request.ItemsId, out var itemsId);
 
-            if(tryParse == true)
+            if(value == true)
             {
 
             var result = _itemRepository.BuyItem(itemsId, request.Quantity);
 
-            var response = new BuyItemsResponse(){Result = result.ToString()};
+            var cost = _itemRepository.GetCostItem(itemsId);
+
+            var response = new BuyItemsResponse(){Result = result.ToString(), Cost = cost.ToString()};
 
             return Task.FromResult(response); 
 
             }
 
-            var badResponse = new BuyItemsResponse(){Result = false.ToString()};
+            var badResponse = new BuyItemsResponse(){Result = false.ToString(), Cost = _MINIMALVALUE.ToString()};
 
             return Task.FromResult(badResponse); 
 

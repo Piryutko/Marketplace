@@ -102,9 +102,32 @@ namespace ShopService.GrpcShopClient
             }
             else
             {
-                var testList = new List<Item>();
-                return testList;
+                var result = new List<Item>();
+                return result;
             }
+        }
+
+        public bool TryBuyItems(Guid id, int quantity, out decimal cost)
+        {
+            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
+
+            if(isConnection)
+            {
+                var request = new BuyItemsRequest(){ItemsId = id.ToString(), Quantity = quantity};
+
+                var result = client.BuyItems(request);
+
+                bool.TryParse(result.Result, out bool response);
+
+                if(response == true)
+                {
+                    cost = Decimal.Parse(result.Cost);
+                    return response;
+                }
+                
+            }
+            cost = default;
+            return false;
         }
 
         private bool TryConnectionUserStorageServer(out GrpcUserService.GrpcUserServiceClient client) //Объединить с методом TryConnectionItemServer

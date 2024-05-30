@@ -25,6 +25,7 @@ message BuyItemsRequest{
 
 message BuyItemsResponse{
     string Result = 1;
+    string Cost = 2;
 }
 
 message GrpcItemModels

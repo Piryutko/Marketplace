@@ -27,7 +27,7 @@ namespace ShopService.Repositories
             throw new NotImplementedException();
         }
 
-        public Order CreateOrder()
+        public Order CreateOrder(Guid itemsId, int Quantity, string userNickname)
         {
             throw new NotImplementedException();
         }

@@ -20,5 +20,7 @@ namespace ItemService.Interfaces
         public bool TryDeleteItem(Guid id);
 
         public bool BuyItem(Guid id, int quantity);
+
+        public decimal GetCostItem(Guid id);
     }
 }

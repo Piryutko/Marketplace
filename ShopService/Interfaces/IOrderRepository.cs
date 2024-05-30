@@ -18,6 +18,6 @@ namespace ShopService.Interfaces
 
         public string GetReceiptPayment(Order order); //получитть квитанцию в Json
 
-        public Order CreateOrder();
+        public Order CreateOrder(Guid itemsId, int Quantity,string userNickname);
     }
 }

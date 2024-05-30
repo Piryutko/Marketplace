@@ -35,6 +35,9 @@ namespace ShopService
              opt.UseInMemoryDatabase("InMem"));
             
             services.AddScoped<IShopClient, ShopClient>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             

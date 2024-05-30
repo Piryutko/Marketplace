@@ -15,5 +15,7 @@ namespace ShopService.Interfaces
         public IEnumerable<Item> GetItemsCategorySortByCost(int categoryId);
 
         public IEnumerable<Item> GetItemsCategorySortByCostDescending(int categoryId);
+
+        public bool TryBuyItems(Guid id, int quantity, out decimal cost);
     }
 }

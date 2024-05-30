@@ -15,12 +15,17 @@ namespace ShopService.Controllers
     {
         private readonly IShopClient _shopClient;
         private readonly IItemRepository _itemRepository;
-      //мне не нравится идея хранить товары в репозитории в этом сервисе
-      //скорей всего они переедут сразу в Order
-        public ShopController(IShopClient shopClient, IItemRepository itemRepository)
+        private IShoppingCartRepository _shoppingCartRepository;
+
+        //мне не нравится идея хранить товары в репозитории в этом сервисе
+        //скорей всего они переедут сразу в Order
+
+
+        public ShopController(IShopClient shopClient, IItemRepository itemRepository, IShoppingCartRepository shoppingCartRepository)
         {
             _shopClient = shopClient;
             _itemRepository = itemRepository;
+            _shoppingCartRepository = shoppingCartRepository;
         }
 
         [HttpGet("CheckNickname/{name}")]
@@ -58,6 +63,41 @@ namespace ShopService.Controllers
            var data = _shopClient.GetItemsCategorySortByCostDescending(idCategory);
 
            return Ok(data);
+        }
+
+        [HttpGet("TestRequest/{itemId},{quantity}")]
+        public ActionResult TestBuyItems(Guid itemId, int quantity)
+        {
+           var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost);
+
+           if(data)
+           {
+                var shoppId = _shoppingCartRepository.CreateShoppingCart();
+                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost, itemId, quantity);
+                return Ok(result);
+           }
+
+           return Ok(data);
+        }
+
+        [HttpPut("PutTestRequest/{shoppId},{itemId},{quantity}")]
+        public ActionResult TestPutBuyItems(Guid shoppId, Guid itemId, int quantity)
+        {
+           var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost);
+
+           if(data)
+           {
+                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost, itemId, quantity);
+                return Ok(result);
+           }
+
+           return Ok(data);
+        }
+
+        [HttpGet("GetTestRequest/{shoppId}")]
+        public ActionResult GetShopp(Guid shoppId)
+        {
+           return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
         }
 
 

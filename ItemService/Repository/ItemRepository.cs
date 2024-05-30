@@ -17,6 +17,7 @@ namespace ItemService.Repository
         {
             _context = context;
         }
+
         public bool BuyItem(Guid id, int value)
         {
             var item = _context.Items.FirstOrDefault(i => i.Id == id);
@@ -35,6 +36,13 @@ namespace ItemService.Repository
         {
             var items = _context.Items.Where(i => i.Category == category).ToList();
             return items;
+        }
+
+        public decimal GetCostItem(Guid id)
+        {
+            var cost = _context.Items.FirstOrDefault(i => i.Id == id);
+
+            return cost != null ? cost.Cost : 0;
         }
 
         public IEnumerable<Item> GetItemsCategorySortByCost(Category category)
