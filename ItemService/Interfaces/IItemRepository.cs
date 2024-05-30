@@ -22,5 +22,7 @@ namespace ItemService.Interfaces
         public bool BuyItem(Guid id, int quantity);
 
         public decimal GetCostItem(Guid id);
+
+        public string GetItemByName(Guid id);
     }
 }

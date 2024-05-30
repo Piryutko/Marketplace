@@ -80,13 +80,15 @@ namespace ItemService.GRPC
 
             var cost = _itemRepository.GetCostItem(itemsId);
 
-            var response = new BuyItemsResponse(){Result = result.ToString(), Cost = cost.ToString()};
+            var itemName = _itemRepository.GetItemByName(itemsId);
+
+            var response = new BuyItemsResponse(){Result = result.ToString(), Cost = cost.ToString(), ItemName = itemName};
 
             return Task.FromResult(response); 
 
             }
 
-            var badResponse = new BuyItemsResponse(){Result = false.ToString(), Cost = _MINIMALVALUE.ToString()};
+            var badResponse = new BuyItemsResponse(){Result = false.ToString(), Cost = _MINIMALVALUE.ToString(), ItemName = default};
 
             return Task.FromResult(badResponse); 
 

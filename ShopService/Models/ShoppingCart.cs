@@ -12,7 +12,7 @@ namespace ShopService.Models
         public ShoppingCart()
         {
             Id = Guid.NewGuid();
-            Items = new List<Guid>();
+            Items = default;
             Quantity = default;
             Cost = decimal.Zero;
         }
@@ -20,18 +20,17 @@ namespace ShopService.Models
         [Key]
         public Guid Id { get; set; }
 
-        [NotMapped]
-        public List<Guid> Items { get; set;}
+        public string Items { get; set;}
 
         public decimal Cost { get; set; }
 
         public int Quantity { get; set; }
 
 
-        public void RefreshShoppingCart(decimal addedCost, Guid idItem, int addedQuantity)
+        public void RefreshShoppingCart(decimal addedCost, string nameItem, int addedQuantity)
         {
             AddCost(addedCost);
-            AddIdItems(idItem);
+            AddItems(nameItem);
             AddQuantity(addedQuantity);
         }
 
@@ -40,9 +39,14 @@ namespace ShopService.Models
             Cost += addedCost;
         }
 
-        private void AddIdItems(Guid idItem)
+        private void AddItems(string itemName)
         {
-            Items.Add(idItem);
+            if(Items == default)
+            {
+                Items += itemName;
+                return;
+            }
+            Items += ", " + itemName;
         }
 
         private void AddQuantity(int addedQuantity)
@@ -50,7 +54,7 @@ namespace ShopService.Models
             Quantity += addedQuantity;
         }
 
-        public List<Guid> GetItemsList()
+        public string GetItemsList()
         {
             return Items;
         }

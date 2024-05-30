@@ -107,7 +107,7 @@ namespace ShopService.GrpcShopClient
             }
         }
 
-        public bool TryBuyItems(Guid id, int quantity, out decimal cost)
+        public bool TryBuyItems(Guid id, int quantity, out decimal cost, out string itemName)
         {
             var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
 
@@ -122,11 +122,13 @@ namespace ShopService.GrpcShopClient
                 if(response == true)
                 {
                     cost = Decimal.Parse(result.Cost);
+                    itemName = result.ItemName;
                     return response;
                 }
                 
             }
             cost = default;
+            itemName = default;
             return false;
         }
 

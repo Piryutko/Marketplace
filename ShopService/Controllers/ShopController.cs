@@ -65,37 +65,48 @@ namespace ShopService.Controllers
            return Ok(data);
         }
 
-        [HttpGet("TestRequest/{itemId},{quantity}")]
-        public ActionResult TestBuyItems(Guid itemId, int quantity)
+        [HttpGet("BuyItems/{itemId},{quantity}")]
+        public ActionResult BuyItems(Guid itemId, int quantity)
         {
-           var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost);
+           var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost, out string itemName);
 
            if(data)
            {
                 var shoppId = _shoppingCartRepository.CreateShoppingCart();
-                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost, itemId, quantity);
-                return Ok(result);
+                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost, itemName, quantity);
+
+                switch (result)
+                {
+                  case true: return Ok(shoppId);
+                  case false: return Ok(result);
+                }
            }
 
            return Ok(data);
         }
 
-        [HttpPut("PutTestRequest/{shoppId},{itemId},{quantity}")]
-        public ActionResult TestPutBuyItems(Guid shoppId, Guid itemId, int quantity)
+        [HttpPut("UpdateShoppingCart/shoppId={shoppId},itemId={itemId},quantity={quantity}")]
+        public ActionResult UpdateShoppingCart(Guid shoppId, Guid itemId, int quantity)
         {
-           var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost);
+           var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost, out string itemName);
 
            if(data)
            {
-                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost, itemId, quantity);
+                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost, itemName, quantity);
+                
+                if(result)
+                {
+                  return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
+                }
+
                 return Ok(result);
            }
 
            return Ok(data);
         }
 
-        [HttpGet("GetTestRequest/{shoppId}")]
-        public ActionResult GetShopp(Guid shoppId)
+        [HttpGet("GetShoppingCartById/{shoppId}")]
+        public ActionResult GetShoppingCartById(Guid shoppId)
         {
            return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
         }

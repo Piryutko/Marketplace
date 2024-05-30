@@ -32,13 +32,13 @@ namespace ShopService.Repositories
             return _context.ShoppingCarts.FirstOrDefault(s => s.Id == id);
         }
 
-        public bool UpdateShoppingCart(Guid IdShoppCart, decimal addedCost, Guid idItem, int addedQuantity)
+        public bool UpdateShoppingCart(Guid IdShoppCart, decimal addedCost, string itemName, int addedQuantity)
         {
             var shoppCart = GetShoppingCartById(IdShoppCart);
 
             if(shoppCart != null)
             {
-                shoppCart.RefreshShoppingCart(addedCost,idItem, addedQuantity);
+                shoppCart.RefreshShoppingCart(addedCost, itemName, addedQuantity);
                 _context.SaveChanges();
 
                 return true;

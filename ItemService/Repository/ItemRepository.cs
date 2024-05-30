@@ -85,5 +85,10 @@ namespace ItemService.Repository
 
             return false;
         }
+
+        public string GetItemByName(Guid Id)
+        {
+            return _context.Items.FirstOrDefault(i => i.Id == Id).Name;
+        }
     }
 }
