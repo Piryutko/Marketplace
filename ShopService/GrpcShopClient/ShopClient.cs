@@ -109,13 +109,13 @@ namespace ShopService.GrpcShopClient
 
         public bool TryBuyItems(Guid id, int quantity, out decimal cost, out string itemName)
         {
-            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
+            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client); //переименовать метод
 
             if(isConnection)
             {
                 var request = new BuyItemsRequest(){ItemsId = id.ToString(), Quantity = quantity};
 
-                var result = client.BuyItems(request);
+                var result = client.BuyItems(request); //изменить логику на стороне сервера для получения ответа от некорректных или не найденых данных
 
                 bool.TryParse(result.Result, out bool response);
 

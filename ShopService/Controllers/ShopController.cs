@@ -14,17 +14,12 @@ namespace ShopService.Controllers
     public class ShopController : ControllerBase
     {
         private readonly IShopClient _shopClient;
-        private readonly IItemRepository _itemRepository;
         private IShoppingCartRepository _shoppingCartRepository;
-
-        //мне не нравится идея хранить товары в репозитории в этом сервисе
-        //скорей всего они переедут сразу в Order
 
 
         public ShopController(IShopClient shopClient, IItemRepository itemRepository, IShoppingCartRepository shoppingCartRepository)
         {
             _shopClient = shopClient;
-            _itemRepository = itemRepository;
             _shoppingCartRepository = shoppingCartRepository;
         }
 
@@ -65,7 +60,7 @@ namespace ShopService.Controllers
            return Ok(data);
         }
 
-        [HttpGet("BuyItems/{itemId},{quantity}")]
+        [HttpPost("BuyItems/{itemId},{quantity}")]
         public ActionResult BuyItems(Guid itemId, int quantity)
         {
            var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost, out string itemName);
@@ -77,8 +72,10 @@ namespace ShopService.Controllers
 
                 switch (result)
                 {
-                  case true: return Ok(shoppId);
-                  case false: return Ok(result);
+                  case true: return Ok
+                  (new Response {Message = $"Индентификатор корзины - {shoppId}", Status = result.ToString()});
+                  case false: return Ok
+                  (new Response {Status = result.ToString()});
                 }
            }
 
