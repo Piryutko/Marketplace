@@ -115,7 +115,32 @@ namespace ShopService.GrpcShopClient
             {
                 var request = new BuyItemsRequest(){ItemsId = id.ToString(), Quantity = quantity};
 
-                var result = client.BuyItems(request); //изменить логику на стороне сервера для получения ответа от некорректных или не найденых данных
+                var result = client.BuyItems(request);
+
+                bool.TryParse(result.Result, out bool response);
+
+                if(response == true)
+                {
+                    cost = Decimal.Parse(result.Cost);
+                    itemName = result.ItemName;
+                    return response;
+                }
+                
+            }
+            cost = default;
+            itemName = default;
+            return false;
+        }
+
+        public bool TryAddItemInShoppCart(Guid Itemid, int quantity, out decimal cost, out string itemName)
+        {
+            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
+
+            if(isConnection)
+            {
+                var request = new TryAddItemInShoppCartRequest(){ItemsId = Itemid.ToString(), Quantity = quantity};
+
+                var result = client.TryAddItemInShoppCart(request);
 
                 bool.TryParse(result.Result, out bool response);
 

@@ -60,15 +60,15 @@ namespace ShopService.Controllers
            return Ok(data);
         }
 
-        [HttpPost("BuyItems/{itemId},{quantity}")]
-        public ActionResult BuyItems(Guid itemId, int quantity)
+        [HttpPost("TryAddItemInShoppCart/{itemId},{quantity}")]
+        public ActionResult TryAddItemInShoppCart(Guid itemId, int quantity)
         {
-           var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost, out string itemName);
+           var data = _shopClient.TryAddItemInShoppCart(itemId, quantity, out decimal cost, out string itemName);
 
            if(data)
            {
-                var shoppId = _shoppingCartRepository.CreateShoppingCart();
-                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost, itemName, quantity);
+                var shoppId = _shoppingCartRepository.CreateShoppingCart();// переделать, появилась идея реализации полноценного нейминга и хранения ID для поступающих айтемов\products
+                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, itemId, cost, itemName, quantity);
 
                 switch (result)
                 {
@@ -89,7 +89,7 @@ namespace ShopService.Controllers
 
            if(data)
            {
-                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost, itemName, quantity);
+                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId,itemId , cost, itemName, quantity);
                 
                 if(result)
                 {

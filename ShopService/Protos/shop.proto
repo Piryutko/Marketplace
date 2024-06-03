@@ -9,6 +9,7 @@ service GrpcUserService{
     rpc GetItemsCategorySortByCost (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
     rpc GetItemsCategorySortByCostDescending (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
     rpc BuyItems (BuyItemsRequest) returns (BuyItemsResponse);
+    rpc TryAddItemInShoppCart (TryAddItemInShoppCartRequest) returns (TryAddItemInShoppCartResponse);
 }
 
 message ShopRequest{
@@ -28,6 +29,18 @@ message BuyItemsResponse{
     string Result = 1;
     string Cost = 2;
     string ItemName = 3;
+}
+
+message TryAddItemInShoppCartRequest{
+    string ItemsId = 1;
+    int32 Quantity = 2;
+}
+
+message TryAddItemInShoppCartResponse{
+    string Result = 1;
+    string Cost = 2;
+    string ItemName = 3;
+    string Id = 4;
 }
 
 message GetItemsByCategoryRequest{

@@ -56,5 +56,10 @@ namespace ItemService.Models
             }
             return false;
         }
+
+        public int GetQuantity()
+        {
+            return Quantity;
+        }
     }
 }

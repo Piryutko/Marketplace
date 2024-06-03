@@ -12,6 +12,6 @@ namespace ShopService.Interfaces
 
         public ShoppingCart GetShoppingCartById(Guid id);
 
-        public bool UpdateShoppingCart(Guid IdShoppCart, decimal addedCost, string itemName, int addedQuantity);
+        public bool UpdateShoppingCart(Guid IdShoppCart,Guid ProductId , decimal addedCost, string itemName, int addedQuantity);
     }
 }

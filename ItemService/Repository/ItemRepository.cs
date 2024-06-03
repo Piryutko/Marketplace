@@ -25,11 +25,23 @@ namespace ItemService.Repository
 
             if (item != null)
             {
-                result = item.TryReduceQuantity(value);
+                result = CheckQuantityById(item.Id, value);
+                _context.SaveChanges();
             }
             
-            _context.SaveChanges();
             return result;
+        }
+
+        public bool CheckQuantityById(Guid id, int value)
+        {
+            var item = _context.Items.FirstOrDefault(i => i.Id == id);
+
+            if(item != null && item.GetQuantity() > value)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public IList<Item> GetItemsByCategory(Category category)

@@ -93,6 +93,32 @@ namespace ItemService.GRPC
             return Task.FromResult(badResponse); 
 
         }
+
+        public override Task<TryAddItemInShoppCartResponse> TryAddItemInShoppCart(TryAddItemInShoppCartRequest request,
+        ServerCallContext context)
+        {
+            var value = Guid.TryParse(request.ItemsId, out var itemsId);
+
+            if(value == true)
+            {
+
+            var result = _itemRepository.CheckQuantityById(itemsId, request.Quantity);
+
+            var cost = _itemRepository.GetCostItem(itemsId);
+
+            var itemName = _itemRepository.GetItemByName(itemsId);
+
+            var response = new TryAddItemInShoppCartResponse(){Result = result.ToString(), Cost = cost.ToString(), ItemName = itemName, Id = request.ItemsId.ToString()};
+
+            return Task.FromResult(response); 
+
+            }
+
+            var badResponse = new TryAddItemInShoppCartResponse(){Result = false.ToString(), Cost = _MINIMALVALUE.ToString(), ItemName = default, Id = default};
+
+            return Task.FromResult(badResponse); 
+
+        }
         
 
         

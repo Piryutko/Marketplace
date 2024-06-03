@@ -24,5 +24,7 @@ namespace ItemService.Interfaces
         public decimal GetCostItem(Guid id);
 
         public string GetItemByName(Guid id);
+
+        public bool CheckQuantityById(Guid id, int value);
     }
 }

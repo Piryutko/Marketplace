@@ -12,25 +12,24 @@ namespace ShopService.Models
         public ShoppingCart()
         {
             Id = Guid.NewGuid();
-            Items = default;
             Quantity = default;
             Cost = decimal.Zero;
+            CreateProduct();
         }
 
         [Key]
         public Guid Id { get; set; }
 
-        public string Items { get; set;}
+        public List<Product> Products { get; set;} //Добавление новых айтемов\products* 
 
-        public decimal Cost { get; set; }
+        public decimal Cost { get; set; } //это будет общей стоимостью корзины*
 
-        public int Quantity { get; set; }
+        public int Quantity { get; set; } //переедет в продукты
 
 
-        public void RefreshShoppingCart(decimal addedCost, string nameItem, int addedQuantity)
+        public void RefreshShoppingCart(decimal addedCost, int addedQuantity)
         {
             AddCost(addedCost);
-            AddItems(nameItem);
             AddQuantity(addedQuantity);
         }
 
@@ -39,14 +38,18 @@ namespace ShopService.Models
             Cost += addedCost;
         }
 
-        private void AddItems(string itemName)
+        private void AddProduct(Product product)
         {
-            if(Items == default)
+            if(product != null)
             {
-                Items += itemName;
+                Products.Add(product);
                 return;
             }
-            Items += ", " + itemName;
+        }
+
+        public void CreateProduct()
+        {
+            Products = new List<Product>();
         }
 
         private void AddQuantity(int addedQuantity)
@@ -54,9 +57,9 @@ namespace ShopService.Models
             Quantity += addedQuantity;
         }
 
-        public string GetItemsList()
+        public List<Product> GetItemsList()
         {
-            return Items;
+            return Products;
         }
     }
 }
