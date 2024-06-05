@@ -9,17 +9,28 @@ namespace ShopService.Models
 {
     public class Product
     {
-        public Product(Guid id, string name)
+        public Product(Guid shoppId, Guid itemId, string name, decimal cost, int quantity)
         {
-            Id = id;
+            ProductId = Guid.NewGuid();
+            ShoppId = shoppId;
+            ItemId = itemId;
             Name = name;
+            Cost = cost;
+            Quantity = quantity;
         }
 
-        public Guid? Id { get; set; }
+        [Key]
+        public Guid ProductId { get; set; }
 
-        public string? Name { get; set; }
+        public Guid ShoppId { get; set; }
+
+        public Guid ItemId { get; set; }
         
-        public decimal Price { get; set; }
+        public string Name { get; set; }
+
+        public decimal Cost {get; set; }
+
+        public int Quantity { get; set; }
 
     }
 }

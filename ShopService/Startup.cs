@@ -38,6 +38,7 @@ namespace ShopService
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             

@@ -27,20 +27,24 @@ namespace ShopService.Repositories
             return shoppCart.Id;
         }
 
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+
         public ShoppingCart GetShoppingCartById(Guid id)
         {
             return _context.ShoppingCarts.FirstOrDefault(s => s.Id == id);
         }
 
-        public bool UpdateShoppingCart(Guid IdShoppCart,Guid idProduct, decimal addedCost, string itemName, int addedQuantity)
+        public bool UpdateShoppingCart(Guid IdShoppCart, decimal addedCost, int addedQuantity)
         {
             var shoppCart = GetShoppingCartById(IdShoppCart);
 
             if(shoppCart != null)
             {
-                // shoppCart.RefreshShoppingCart(addedCost, idProduct ,itemName, addedQuantity);
+                shoppCart.UpdateShoppingCart(addedCost, addedQuantity);
                 _context.SaveChanges();
-
                 return true;
             }
 

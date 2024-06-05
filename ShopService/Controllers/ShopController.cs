@@ -15,12 +15,14 @@ namespace ShopService.Controllers
     {
         private readonly IShopClient _shopClient;
         private IShoppingCartRepository _shoppingCartRepository;
+        private IProductRepository _productRepository;
 
-
-        public ShopController(IShopClient shopClient, IItemRepository itemRepository, IShoppingCartRepository shoppingCartRepository)
+        public ShopController(IShopClient shopClient, IItemRepository itemRepository,
+         IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository)
         {
             _shopClient = shopClient;
             _shoppingCartRepository = shoppingCartRepository;
+            _productRepository = productRepository;
         }
 
         [HttpGet("CheckNickname/{name}")]
@@ -60,15 +62,20 @@ namespace ShopService.Controllers
            return Ok(data);
         }
 
-        [HttpPost("TryAddItemInShoppCart/{itemId},{quantity}")]
-        public ActionResult TryAddItemInShoppCart(Guid itemId, int quantity)
+        [HttpPost("TryAddItemInNewShoppCart/{itemId},{quantity}")]
+        public ActionResult TryAddItemInNewShoppCart(Guid itemId, int quantity)
         {
            var data = _shopClient.TryAddItemInShoppCart(itemId, quantity, out decimal cost, out string itemName);
 
            if(data)
            {
-                var shoppId = _shoppingCartRepository.CreateShoppingCart();// переделать, появилась идея реализации полноценного нейминга и хранения ID для поступающих айтемов\products
-                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, itemId, cost, itemName, quantity);
+                var shoppId = _shoppingCartRepository.CreateShoppingCart();
+
+                var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost,quantity);
+
+                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
+
+                var itemtest = _shoppingCartRepository.GetShoppingCartById(shoppId);
 
                 switch (result)
                 {
@@ -89,8 +96,10 @@ namespace ShopService.Controllers
 
            if(data)
            {
-                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId,itemId , cost, itemName, quantity);
-                
+               var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost,quantity);
+
+                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
+
                 if(result)
                 {
                   return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
@@ -105,8 +114,18 @@ namespace ShopService.Controllers
         [HttpGet("GetShoppingCartById/{shoppId}")]
         public ActionResult GetShoppingCartById(Guid shoppId)
         {
-           return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
+         var testResult = _shoppingCartRepository.GetShoppingCartById(shoppId);
+         return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
         }
+
+        [HttpGet("GetAllProductsByShoppId/{shoppId}")]
+        public ActionResult GetAllProductsByShoppId(Guid shoppId)
+        {
+            var products = _productRepository.GetAllProductsByShoppId(shoppId);
+
+            return Ok(products);
+        }
+
 
 
 
