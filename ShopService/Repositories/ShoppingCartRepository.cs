@@ -50,6 +50,13 @@ namespace ShopService.Repositories
 
             return false;
 
+        }   
+
+        public void DeleteShoppingCart(Guid shoppCartId)
+        {
+            var shoppCart = _context.ShoppingCarts.FirstOrDefault(p => p.Id == shoppCartId);
+            var result = _context.ShoppingCarts.Remove(shoppCart);
+            _context.SaveChanges();
         }
 
         public void RefreshShoppingCart(Guid shoppCartId, int quantity, decimal cost)

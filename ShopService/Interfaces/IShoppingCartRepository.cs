@@ -8,15 +8,16 @@ namespace ShopService.Interfaces
 {
     public interface IShoppingCartRepository
     {
-        public Guid CreateShoppingCart();
+         Guid CreateShoppingCart();
 
-        public ShoppingCart GetShoppingCartById(Guid id);
+         ShoppingCart GetShoppingCartById(Guid id);
 
-        public bool UpdateShoppingCart(Guid shoppCartId, decimal addedCost, int addedQuantity);
+         bool UpdateShoppingCart(Guid shoppCartId, decimal addedCost, int addedQuantity);
 
-        public void RefreshShoppingCart(Guid shoppCartId, int quantity, decimal cost);
+         void RefreshShoppingCart(Guid shoppCartId, int quantity, decimal cost);
         
+         void DeleteShoppingCart(Guid shoppCartId);
 
-        public void SaveChanges();
+         void SaveChanges();
     }
 }

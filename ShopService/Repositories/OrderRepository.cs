@@ -17,34 +17,16 @@ namespace ShopService.Repositories
             _context = context;
         }
 
-        public void AddToCart(int id)
+        public Order CreateOrder(string nickname, Guid shoppId, int sumProducts, decimal amount)
         {
-            throw new NotImplementedException();
+            var order = new Order(nickname, shoppId, sumProducts, amount);
+
+            return order;
         }
 
-        public Order AddUserInPayment()
+        public Order GetOrderById(Guid id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Order CreateOrder(Guid itemsId, int Quantity, string userNickname)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetReceiptPayment(Order order)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryDeleteAllItemInCart()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryDeleteItemInCart(Guid id)
-        {
-            throw new NotImplementedException();
+            return _context.Orders.FirstOrDefault(o => o.OrderId == id);
         }
     }
 }

@@ -8,16 +8,8 @@ namespace ShopService.Interfaces
 {
     public interface IOrderRepository
     {
-        public void AddToCart(int id);
+        public Order CreateOrder(string nickname, Guid shoppId, int sumProducts, decimal amount);
 
-        public Order AddUserInPayment();
-
-        public bool TryDeleteItemInCart(Guid id);
-
-        public bool TryDeleteAllItemInCart();
-
-        public string GetReceiptPayment(Order order); //получитть квитанцию в Json
-
-        public Order CreateOrder(Guid itemsId, int Quantity,string userNickname);
+        public Order GetOrderById(Guid id);
     }
 }

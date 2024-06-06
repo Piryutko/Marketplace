@@ -56,6 +56,20 @@ namespace ShopService.Repositories
             return false;
         }
 
+        public void DeleteProductsByShoppId(Guid id)
+        {
+            var products = _context.Products.Where(p => p.ShoppId == id);
+            var result = _context.Products.Except(products); // тест*
+            _context.SaveChanges();
+        }
+
+        public void DeleteProductById(Guid id)
+        {
+            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+            var result = _context.Products.Remove(product); //тест*
+            _context.SaveChanges();
+        }
+
         public Product GetProductByShoppIdProductId(Guid shoppId, Guid productId)
         {
             var product = _context.Products.FirstOrDefault(p => p.ShoppId == shoppId && p.ProductId == productId);

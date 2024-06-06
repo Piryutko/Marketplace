@@ -147,13 +147,59 @@ namespace ShopService.Controllers
 
                _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
                
-               return Ok(result); //Вот это все зарефакторить*
+               return Ok(result); //Рефакторинг
             }
             
             return Ok(result);
          }
 
 
+         [HttpDelete("DeleteProductsInShoppCart/shoppId={shoppId},productId={productId}")]
+         public ActionResult DeleteProductsInShoppCart(Guid shoppId, Guid productId)
+         {
+            _productRepository.DeleteProductById(productId);
+
+            if(true)
+            {
+               var products = _productRepository.GetAllProductsByShoppId(shoppId);
+
+               decimal cost = default;
+               int quantityCount = default;
+
+               foreach (var product in products)
+               {
+                  cost += product.Cost;
+                  quantityCount += product.Quantity;
+               }
+
+               _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
+               
+               return Ok(true); //Рефакторинг
+            }
+
+
+         }
+
+         [HttpDelete("DeleteShoppCart/shoppId={shoppId}")]
+         public ActionResult DeleteShoppCart(Guid shoppId)
+         {
+            _shoppingCartRepository.DeleteShoppingCart(shoppId);
+            _productRepository.DeleteProductsByShoppId(shoppId);
+
+            return Ok();
+         }
+
+         // [HttpGet("CreateOrder/nickname={nickname}, shoppid={shoppid}")]
+         // public ActionResult CreateOrder(string nickname, Guid shoppId)
+         // {
+         //    var response = _shopClient.GetResultRequestByNickname(nickname, out string result);
+
+         //    if(response)
+         //    {
+               
+         //    }
+
+         // }
 
 
     }

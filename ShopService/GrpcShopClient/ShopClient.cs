@@ -35,6 +35,7 @@ namespace ShopService.GrpcShopClient
                 var targetUser = client.CheckingUserByNickname(request);
 
                 result = targetUser.Result;
+                
                 return true;
             }
             else
