@@ -12,7 +12,10 @@ namespace ShopService.Interfaces
 
         public ShoppingCart GetShoppingCartById(Guid id);
 
-        public bool UpdateShoppingCart(Guid IdShoppCart, decimal addedCost, int addedQuantity);
+        public bool UpdateShoppingCart(Guid shoppCartId, decimal addedCost, int addedQuantity);
+
+        public void RefreshShoppingCart(Guid shoppCartId, int quantity, decimal cost);
+        
 
         public void SaveChanges();
     }

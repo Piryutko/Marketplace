@@ -17,6 +17,7 @@ namespace ShopService.Models
             Name = name;
             Cost = cost;
             Quantity = quantity;
+            Price = cost; //переделать потом надо будет, Цена и Стоимость должны быть разными свойствами
         }
 
         [Key]
@@ -31,6 +32,19 @@ namespace ShopService.Models
         public decimal Cost {get; set; }
 
         public int Quantity { get; set; }
+
+        public decimal Price {get; set; }
+
+        public void ChangeQuantity(int quantity)
+        {
+            Quantity = quantity;
+        }
+
+        public void ChangeCost(int quantity)
+        {
+            Cost = default;
+            Cost = Price * quantity;
+        }
 
     }
 }

@@ -37,9 +37,9 @@ namespace ShopService.Repositories
             return _context.ShoppingCarts.FirstOrDefault(s => s.Id == id);
         }
 
-        public bool UpdateShoppingCart(Guid IdShoppCart, decimal addedCost, int addedQuantity)
+        public bool UpdateShoppingCart(Guid shoppCartId, decimal addedCost, int addedQuantity)
         {
-            var shoppCart = GetShoppingCartById(IdShoppCart);
+            var shoppCart = GetShoppingCartById(shoppCartId);
 
             if(shoppCart != null)
             {
@@ -50,6 +50,17 @@ namespace ShopService.Repositories
 
             return false;
 
+        }
+
+        public void RefreshShoppingCart(Guid shoppCartId, int quantity, decimal cost)
+        {
+            var shoppCart = GetShoppingCartById(shoppCartId);
+            
+            if(shoppCart != null)
+            {
+                shoppCart.RefreshShoppingCart(quantity, cost);
+                _context.SaveChanges();
+            }
         }
     }
 }

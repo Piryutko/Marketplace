@@ -19,7 +19,11 @@ namespace ShopService.Repositories
         public Guid CreateProduct(Guid shoppId, Guid itemId, string name, decimal cost, int quantity)
         {
             var product = new Product(shoppId, itemId, name, cost, quantity); 
+
+            product.ChangeCost(quantity);
+            
             _context.Products.Add(product);
+
             _context.SaveChanges();
 
             return product.ProductId;
@@ -30,11 +34,33 @@ namespace ShopService.Repositories
             return _context.Products.ToList();
         }
 
-        public List<Product> GetAllProductsByShoppId(Guid shoppId)
+        public IEnumerable<Product> GetAllProductsByShoppId(Guid shoppId)
         {
             var products = _context.Products.Where(i => i.ShoppId == shoppId);
 
-            return products.ToList();
+            return products;
+        }
+
+        public bool TryUpdateProduct(Guid shoppId, Guid productId, int quantity)
+        {
+            var product = GetProductByShoppIdProductId(shoppId, productId);
+
+            if(product != null)
+            {
+                product.ChangeQuantity(quantity);
+                product.ChangeCost(quantity);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
+        }
+
+        public Product GetProductByShoppIdProductId(Guid shoppId, Guid productId)
+        {
+            var product = _context.Products.FirstOrDefault(p => p.ShoppId == shoppId && p.ProductId == productId);
+
+            return product;
         }
     }
 }

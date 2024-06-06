@@ -12,6 +12,10 @@ namespace ShopService.Interfaces
 
         List<Product> GetAllProducts();
 
-        List<Product> GetAllProductsByShoppId(Guid shoppId);
+        IEnumerable<Product> GetAllProductsByShoppId(Guid shoppId);
+
+        bool TryUpdateProduct(Guid shoppId, Guid productId, int quantity);
+
+        Product GetProductByShoppIdProductId(Guid shoppId, Guid productId);
     }
 }

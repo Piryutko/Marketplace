@@ -98,7 +98,7 @@ namespace ShopService.Controllers
            {
                var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost,quantity);
 
-                var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
+               var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
 
                 if(result)
                 {
@@ -114,8 +114,9 @@ namespace ShopService.Controllers
         [HttpGet("GetShoppingCartById/{shoppId}")]
         public ActionResult GetShoppingCartById(Guid shoppId)
         {
-         var testResult = _shoppingCartRepository.GetShoppingCartById(shoppId);
+
          return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
+
         }
 
         [HttpGet("GetAllProductsByShoppId/{shoppId}")]
@@ -125,6 +126,32 @@ namespace ShopService.Controllers
 
             return Ok(products);
         }
+
+         [HttpPut("UpdateProduct/shoppId={shoppId},productId={productId},quantity={quantity}")]
+         public ActionResult TryUpdateProduct(Guid shoppId, Guid productId, int quantity)
+         {
+            var result = _productRepository.TryUpdateProduct(shoppId, productId, quantity);
+
+            if(result)
+            {
+               var products = _productRepository.GetAllProductsByShoppId(shoppId);
+
+               decimal cost = default;
+               int quantityCount = default;
+
+               foreach (var product in products)
+               {
+                  cost += product.Cost;
+                  quantityCount += product.Quantity;
+               }
+
+               _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
+               
+               return Ok(result); //Вот это все зарефакторить*
+            }
+            
+            return Ok(result);
+         }
 
 
 

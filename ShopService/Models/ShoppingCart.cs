@@ -31,6 +31,12 @@ namespace ShopService.Models
             AddQuantity(addedQuantity);
         }
 
+        public void RefreshShoppingCart(int quantity, decimal cost)
+        {
+            RefreshCost(cost);
+            RefreshQuantity(quantity);
+        }
+
         private void AddCost(decimal addedCost)
         {
             Cost += addedCost;
@@ -40,6 +46,16 @@ namespace ShopService.Models
         private void AddQuantity(int addedQuantity)
         {
             Quantity += addedQuantity;
+        }
+
+        private void RefreshCost(decimal cost)
+        {
+            Cost = cost;
+        }
+
+        private void RefreshQuantity(int quantity)
+        {
+            Quantity = quantity;
         }
     }
 }
