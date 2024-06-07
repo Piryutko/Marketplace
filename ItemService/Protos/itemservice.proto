@@ -7,8 +7,18 @@ service GrpcUserService{
     rpc GetItemsByCategory (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
     rpc GetItemsCategorySortByCost (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
     rpc GetItemsCategorySortByCostDescending (GetItemsByCategoryRequest) returns (GetItemsByCategoryResponse);
-    rpc BuyItems (BuyItemsRequest) returns (BuyItemsResponse);
+    rpc CheckQuantityItem (CheckQuantityItemRequest) returns (CheckQuantityItemResponse);
     rpc TryAddItemInShoppCart (TryAddItemInShoppCartRequest) returns (TryAddItemInShoppCartResponse);
+    rpc BuyItems (BuyItemsRequest) returns (BuyItemsResponse);
+}
+
+message BuyItemsRequest{
+    string ProductId = 1;
+    int32 Quantity = 2;
+}
+
+message BuyItemsResponse{
+    string Response = 1;
 }
 
 message GetItemsByCategoryRequest{
@@ -19,12 +29,12 @@ message GetItemsByCategoryResponse{
     repeated GrpcItemModels Items = 1;
 }
 
-message BuyItemsRequest{
+message CheckQuantityItemRequest{
     string ItemsId = 1;
     int32 Quantity = 2;
 }
 
-message BuyItemsResponse{
+message CheckQuantityItemResponse{
     string Result = 1;
     string Cost = 2;
     string ItemName = 3;

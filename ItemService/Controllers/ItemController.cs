@@ -54,10 +54,10 @@ namespace ItemService.Controllers
             return Ok(_itemRepository.TryDeleteItem(id));
         }
 
-        [HttpPut("BuyItem/{id},{value}")] 
-        public ActionResult BuyItem(Guid id,int value)
+        [HttpPut("CheckQuantityItem/{id},{value}")] 
+        public ActionResult CheckQuantityItem(Guid id,int value)
         {
-            return Ok(_itemRepository.BuyItem(id,value));
+            return Ok(_itemRepository.CheckQuantityItem(id,value));
         }
 
 

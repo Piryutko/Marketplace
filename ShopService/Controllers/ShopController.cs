@@ -92,7 +92,7 @@ namespace ShopService.Controllers
         [HttpPut("UpdateShoppingCart/shoppId={shoppId},itemId={itemId},quantity={quantity}")]
         public ActionResult UpdateShoppingCart(Guid shoppId, Guid itemId, int quantity)
         {
-           var data = _shopClient.TryBuyItems(itemId, quantity, out decimal cost, out string itemName);
+           var data = _shopClient.CheckQuantityItem(itemId, quantity, out decimal cost, out string itemName);
 
            if(data)
            {
@@ -189,17 +189,23 @@ namespace ShopService.Controllers
             return Ok();
          }
 
-         // [HttpGet("CreateOrder/nickname={nickname}, shoppid={shoppid}")]
-         // public ActionResult CreateOrder(string nickname, Guid shoppId)
-         // {
-         //    var response = _shopClient.GetResultRequestByNickname(nickname, out string result);
+         [HttpGet("CreateOrder/nickname={nickname}, shoppid={shoppid}")]
+         public ActionResult CreateOrder(string nickname, Guid shoppId)
+         {
+            _shopClient.GetResultRequestByNickname(nickname, out string result);
 
-         //    if(response)
-         //    {
-               
-         //    }
+            if(bool.Parse(result))
+            {
+               var products = _productRepository.GetAllProductsByShoppId(shoppId); //я буду отправлять по одному айдишнику на сервер для его проверки
+               var product = products.FirstOrDefault();
+               var productId = product.ProductId;
+               var quantity = product.Quantity;
 
-         // }
+
+            }
+
+            return Ok(new Response(){Message = "Пользователь не найден", Status = "False"});
+         }
 
 
     }

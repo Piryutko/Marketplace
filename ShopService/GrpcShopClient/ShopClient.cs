@@ -108,15 +108,15 @@ namespace ShopService.GrpcShopClient
             }
         }
 
-        public bool TryBuyItems(Guid id, int quantity, out decimal cost, out string itemName)
+        public bool CheckQuantityItem(Guid id, int quantity, out decimal cost, out string itemName)
         {
             var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client); //переименовать метод
 
             if(isConnection)
             {
-                var request = new BuyItemsRequest(){ItemsId = id.ToString(), Quantity = quantity};
+                var request = new CheckQuantityItemRequest(){ItemsId = id.ToString(), Quantity = quantity};
 
-                var result = client.BuyItems(request);
+                var result = client.CheckQuantityItem(request);
 
                 bool.TryParse(result.Result, out bool response);
 
@@ -155,6 +155,25 @@ namespace ShopService.GrpcShopClient
             }
             cost = default;
             itemName = default;
+            return false;
+        }
+
+        public bool BuyItem(Guid productId, int quantity)
+        {
+            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
+
+            if(isConnection)
+            {
+                var request = new BuyItemsRequest (){ProductId = productId.ToString(), Quantity = quantity};
+                var response = client.BuyItems(request);
+                bool.TryParse(response.Response, out bool result); //Далее конструирую на стороне сервера response
+
+                if(result)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 

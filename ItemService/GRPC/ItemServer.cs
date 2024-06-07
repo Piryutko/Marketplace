@@ -68,7 +68,7 @@ namespace ItemService.GRPC
             return Task.FromResult(items);
         }
 
-        public override Task<BuyItemsResponse> BuyItems(BuyItemsRequest request,
+        public override Task<CheckQuantityItemResponse> CheckQuantityItem(CheckQuantityItemRequest request,
         ServerCallContext context)
         {
             var value = Guid.TryParse(request.ItemsId, out var itemsId);
@@ -76,19 +76,19 @@ namespace ItemService.GRPC
             if(value == true)
             {
 
-            var result = _itemRepository.BuyItem(itemsId, request.Quantity);
+            var result = _itemRepository.CheckQuantityItem(itemsId, request.Quantity);
 
             var cost = _itemRepository.GetCostItem(itemsId);
 
             var itemName = _itemRepository.GetItemByName(itemsId);
 
-            var response = new BuyItemsResponse(){Result = result.ToString(), Cost = cost.ToString(), ItemName = itemName};
+            var response = new CheckQuantityItemResponse(){Result = result.ToString(), Cost = cost.ToString(), ItemName = itemName};
 
             return Task.FromResult(response); 
 
             }
 
-            var badResponse = new BuyItemsResponse(){Result = false.ToString(), Cost = _MINIMALVALUE.ToString(), ItemName = default};
+            var badResponse = new CheckQuantityItemResponse(){Result = false.ToString(), Cost = _MINIMALVALUE.ToString(), ItemName = default};
 
             return Task.FromResult(badResponse); 
 

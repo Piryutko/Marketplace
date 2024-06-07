@@ -14,7 +14,7 @@ namespace ShopService.Models
             ShoppId = shoppId;
             SumProducts = sumProducts;
             Amount = amount;
-            PaymentStatus = false;
+            // PaymentStatus = false;
         }
 
         public Guid OrderId { get; set; }
@@ -27,11 +27,11 @@ namespace ShopService.Models
 
         public decimal Amount { get; set; }
 
-        public bool PaymentStatus { get; set; }
+        // public bool PaymentStatus { get; set; }
 
-        public void ChangePaymentStatus(bool value)
-        {
-            PaymentStatus = value;
-        }
+        // public void ChangePaymentStatus(bool value)
+        // {
+        //     PaymentStatus = value;
+        // }
     }
 }

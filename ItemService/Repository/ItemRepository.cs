@@ -18,7 +18,7 @@ namespace ItemService.Repository
             _context = context;
         }
 
-        public bool BuyItem(Guid id, int value)
+        public bool CheckQuantityItem(Guid id, int value)
         {
             var item = _context.Items.FirstOrDefault(i => i.Id == id);
             var result = false;

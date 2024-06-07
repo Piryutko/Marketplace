@@ -16,8 +16,10 @@ namespace ShopService.Interfaces
 
         public IEnumerable<Item> GetItemsCategorySortByCostDescending(int categoryId);
 
-        public bool TryBuyItems(Guid id, int quantity, out decimal cost, out string itemName);
+        public bool CheckQuantityItem(Guid id, int quantity, out decimal cost, out string itemName);
         
         public bool TryAddItemInShoppCart(Guid id, int quantity, out decimal cost, out string itemName);
+
+        public bool BuyItem(Guid itemId, int quantity);
     }
 }
