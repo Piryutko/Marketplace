@@ -119,6 +119,26 @@ namespace ItemService.GRPC
             return Task.FromResult(badResponse); 
 
         }
+
+        public override Task<BuyItemsResponse> BuyItems(BuyItemsRequest request,
+        ServerCallContext context)
+        {
+            Guid.TryParse(request.ProductId, out var itemsId);
+            var quantity = request.Quantity;
+
+            if(_itemRepository.TryChangeQuantityById(itemsId, quantity))
+            {
+                var response = new BuyItemsResponse(){Response = true.ToString()};
+
+                return Task.FromResult(response); 
+            }
+
+            var badResponse =  new BuyItemsResponse(){Response = false.ToString()};
+            return Task.FromResult(badResponse); 
+
+        }
+
+
         
 
         

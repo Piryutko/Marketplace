@@ -26,5 +26,7 @@ namespace ItemService.Interfaces
         public string GetItemByName(Guid id);
 
         public bool CheckQuantityById(Guid id, int value);
+
+        public bool TryChangeQuantityById(Guid id, int value);
     }
 }

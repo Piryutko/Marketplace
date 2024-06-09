@@ -192,19 +192,21 @@ namespace ShopService.Controllers
          [HttpGet("CreateOrder/nickname={nickname}, shoppid={shoppid}")]
          public ActionResult CreateOrder(string nickname, Guid shoppId)
          {
-            _shopClient.GetResultRequestByNickname(nickname, out string result);
+            // _shopClient.GetResultRequestByNickname(nickname, out string result);
 
-            if(bool.Parse(result))
+            // if(bool.Parse(result))
             {
                var products = _productRepository.GetAllProductsByShoppId(shoppId); //я буду отправлять по одному айдишнику на сервер для его проверки
                var product = products.FirstOrDefault();
-               var productId = product.ProductId;
+               var productId = product.ItemId;
                var quantity = product.Quantity;
 
+               var response = _shopClient.BuyItem(productId, quantity);
 
+               return Ok(response);
             }
 
-            return Ok(new Response(){Message = "Пользователь не найден", Status = "False"});
+            // return Ok(new Response(){Message = "Пользователь не найден", Status = "False"});
          }
 
 

@@ -164,7 +164,7 @@ namespace ShopService.GrpcShopClient
 
             if(isConnection)
             {
-                var request = new BuyItemsRequest (){ProductId = productId.ToString(), Quantity = quantity};
+                var request = new BuyItemsRequest() {ProductId = productId.ToString(), Quantity = quantity};
                 var response = client.BuyItems(request);
                 bool.TryParse(response.Response, out bool result); //Далее конструирую на стороне сервера response
 

@@ -24,7 +24,6 @@ namespace ItemService.Models
                 Ensure.That(cost).IsGt(0);
                 Cost = cost;
 
-                Ensure.That(quantity).IsGt(0);
                 Quantity = quantity;
             }
             catch (Exception ex)
@@ -32,7 +31,7 @@ namespace ItemService.Models
                 Id = Guid.Empty;
                 Name = String.Empty;
                 Cost = 0;
-                Quantity = -1;
+                Quantity = 0;
                 Console.WriteLine($"Exception: {ex.Message}");
             }
         }
@@ -60,6 +59,11 @@ namespace ItemService.Models
         public int GetQuantity()
         {
             return Quantity;
+        }
+
+        public void ChangeQuantity(int value)
+        {
+            Quantity = Quantity - value;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace ItemService.Repository
         {
             var item = _context.Items.FirstOrDefault(i => i.Id == id);
 
-            if(item != null && item.GetQuantity() > value)
+            if(item != null && item.GetQuantity() >= value && item.GetQuantity() >= 0)
             {
                 return true;
             }
@@ -101,6 +101,22 @@ namespace ItemService.Repository
         public string GetItemByName(Guid Id)
         {
             return _context.Items.FirstOrDefault(i => i.Id == Id).Name;
+        }
+
+        public bool TryChangeQuantityById(Guid id, int value)
+        {
+            var item = _context.Items.FirstOrDefault(i => i.Id == id);
+            var checkItem = CheckQuantityById(item.Id, value);
+            var currentQuantity = item.Quantity;
+
+            if(checkItem)
+            {
+                item.ChangeQuantity(value);
+                _context.SaveChanges();
+                
+                return true;
+            }
+            return false;
         }
     }
 }
