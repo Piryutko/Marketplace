@@ -14,6 +14,7 @@ namespace ShopService.Models
             ShoppId = shoppId;
             SumProducts = sumProducts;
             Amount = amount;
+            OrderId = Guid.NewGuid();
             // PaymentStatus = false;
         }
 

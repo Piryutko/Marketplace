@@ -17,12 +17,15 @@ namespace ShopService.Controllers
         private IShoppingCartRepository _shoppingCartRepository;
         private IProductRepository _productRepository;
 
+        private IOrderRepository _orderRepository;
+
         public ShopController(IShopClient shopClient, IItemRepository itemRepository,
-         IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository)
+         IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository, IOrderRepository orderRepository)
         {
             _shopClient = shopClient;
             _shoppingCartRepository = shoppingCartRepository;
             _productRepository = productRepository;
+            _orderRepository = orderRepository;
         }
 
         [HttpGet("CheckNickname/{name}")]
@@ -196,14 +199,25 @@ namespace ShopService.Controllers
 
             // if(bool.Parse(result))
             {
-               var products = _productRepository.GetAllProductsByShoppId(shoppId); //я буду отправлять по одному айдишнику на сервер для его проверки
+               var products = _productRepository.GetAllProductsByShoppId(shoppId);
+               //я буду отправлять по одному айдишнику на сервер для его проверки
+               //дальше необходимо будет разработать функционал по передаче IdProduct и его проверке
                var product = products.FirstOrDefault();
                var productId = product.ItemId;
                var quantity = product.Quantity;
 
                var response = _shopClient.BuyItem(productId, quantity);
+               var quantityProducts = product.Quantity;
+               var cost = product.Cost;
 
-               return Ok(response);
+               if(response)
+               {
+
+                  var order = _orderRepository.CreateOrder("Test", shoppId, quantityProducts, cost);
+                  return Ok(order);
+
+               }
+               return Ok(false);
             }
 
             // return Ok(new Response(){Message = "Пользователь не найден", Status = "False"});
