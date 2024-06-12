@@ -8,13 +8,14 @@ namespace ShopService.Models
 {
     public class Order
     {
-        public Order(string nickname, Guid shoppId, int sumProducts, decimal amount)
+        public Order(string nickname, Guid shoppId, int products, decimal cost)
         {
             Nickname = nickname;
             ShoppId = shoppId;
-            SumProducts = sumProducts;
-            Amount = amount;
+            Products = products;
+            Cost = cost;
             OrderId = Guid.NewGuid();
+            
             // PaymentStatus = false;
         }
 
@@ -24,9 +25,17 @@ namespace ShopService.Models
         
         public Guid ShoppId { get; set; }
 
-        public int SumProducts { get; set; }
+        public int Products { get; set; }
 
-        public decimal Amount { get; set; }
+        public decimal Cost { get; set; }
+
+        public string OrderInfo { get; set; }
+
+        public string AddInfo(string message)
+        {
+            OrderInfo += message;
+            return OrderInfo;
+        }
 
         // public bool PaymentStatus { get; set; }
 

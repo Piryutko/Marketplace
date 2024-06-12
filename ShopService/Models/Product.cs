@@ -17,7 +17,7 @@ namespace ShopService.Models
             Name = name;
             Cost = cost;
             Quantity = quantity;
-            Price = cost; //переделать потом надо будет, Цена и Стоимость должны быть разными свойствами
+            Price = cost;
         }
 
         [Key]

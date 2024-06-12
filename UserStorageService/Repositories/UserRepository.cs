@@ -55,7 +55,7 @@ namespace UserStorageService.Repositories
                 return true;
             }
 
-            return true;
+            return false;
         }
 
         public bool CheckingUserByEmail(User User)
