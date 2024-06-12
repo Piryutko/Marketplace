@@ -19,6 +19,9 @@ namespace ShopService.Controllers
 
       private IOrderRepository _orderRepository;
 
+      private const string MESSAGE_ERROR = "Возникла ошибка, обратитесь в службу поддержки";
+      private const string STATUS_ERROR = "Ошибка";
+
       public ShopController(IShopClient shopClient, IItemRepository itemRepository,
        IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository, IOrderRepository orderRepository)
       {
@@ -31,155 +34,236 @@ namespace ShopService.Controllers
       [HttpGet("CheckNickname/{name}")]
       public ActionResult CheckNickname(string name)
       {
-         var response = _shopClient.GetResultRequestByNickname(name, out string result);
-
-         if (response == true)
+         try
          {
-            return Ok(result);
+            var response = _shopClient.GetResultRequestByNickname(name, out string result);
+
+            if (response == true)
+            {
+               return Ok(result);
+            }
+
+            return BadRequest();
+
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
          }
 
-         return BadRequest();
       }
 
       [HttpGet("GettAllItems")]
       public ActionResult<IEnumerable<Item>> GetAllItems(int idCategory)
       {
-         var data = _shopClient.GetItemsByCategory(idCategory);
+         try
+         {
+            var data = _shopClient.GetItemsByCategory(idCategory);
 
-         return Ok(data);
+            return Ok(data);
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+         }
+
       }
 
       [HttpGet("GetItemsCategorySortByCost")]
       public ActionResult<IEnumerable<Item>> GetItemsCategorySortByCost(int idCategory)
       {
-         var data = _shopClient.GetItemsCategorySortByCost(idCategory);
+         try
+         {
+            var data = _shopClient.GetItemsCategorySortByCost(idCategory);
 
-         return Ok(data);
+            return Ok(data);
+
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+         }
       }
 
       [HttpGet("GetItemsCategorySortByCostDescending")]
       public ActionResult<IEnumerable<Item>> GetItemsCategorySortByCostDescending(int idCategory)
       {
-         var data = _shopClient.GetItemsCategorySortByCostDescending(idCategory);
+         try
+         {
+            var data = _shopClient.GetItemsCategorySortByCostDescending(idCategory);
 
-         return Ok(data);
+            return Ok(data);
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+         }
+
       }
 
       [HttpPost("TryAddItemInNewShoppCart/{itemId},{quantity}")]
       public ActionResult TryAddItemInNewShoppCart(Guid itemId, int quantity)
       {
-         var data = _shopClient.TryAddItemInShoppCart(itemId, quantity, out decimal cost, out string itemName);
-
-         if (data)
+         try
          {
-            var shoppId = _shoppingCartRepository.CreateShoppingCart();
+            var data = _shopClient.TryAddItemInShoppCart(itemId, quantity, out decimal cost, out string itemName);
 
-            var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost, quantity);
-
-            var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
-
-            var itemtest = _shoppingCartRepository.GetShoppingCartById(shoppId);
-
-            switch (result)
+            if (data)
             {
-               case true:
-                  return Ok
-               (new Response { Message = $"Индентификатор корзины - {shoppId}", Status = result.ToString() });
-               case false:
-                  return Ok
-               (new Response { Status = result.ToString() });
+               var shoppId = _shoppingCartRepository.CreateShoppingCart();
+
+               var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost, quantity);
+
+               var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
+
+               var itemtest = _shoppingCartRepository.GetShoppingCartById(shoppId);
+
+               switch (result)
+               {
+                  case true:
+                     return Ok
+                  (new Response { Message = $"Индентификатор корзины - {shoppId}", Status = result.ToString() });
+                  case false:
+                     return Ok
+                  (new Response { Status = result.ToString() });
+               }
             }
+
+            return Ok(data);
+
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
          }
 
-         return Ok(data);
       }
 
       [HttpPut("UpdateShoppingCart/shoppId={shoppId},itemId={itemId},quantity={quantity}")]
       public ActionResult UpdateShoppingCart(Guid shoppId, Guid itemId, int quantity)
       {
-         var data = _shopClient.CheckQuantityItem(itemId, quantity, out decimal cost, out string itemName);
-
-         if (data)
+         try
          {
-            var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost, quantity);
+            var data = _shopClient.CheckQuantityItem(itemId, quantity, out decimal cost, out string itemName);
 
-            var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
-
-            if (result)
+            if (data)
             {
-               return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
+               var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost, quantity);
+
+               var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
+
+               if (result)
+               {
+                  return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
+               }
+
+               return Ok(result);
             }
 
-            return Ok(result);
+            return Ok(data);
+
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
          }
 
-         return Ok(data);
       }
 
       [HttpGet("GetShoppingCartById/{shoppId}")]
       public ActionResult GetShoppingCartById(Guid shoppId)
       {
-
-         return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
-
+         try
+         {
+            return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+         }
       }
 
       [HttpGet("GetAllProductsByShoppId/{shoppId}")]
       public ActionResult GetAllProductsByShoppId(Guid shoppId)
       {
-         var products = _productRepository.GetAllProductsByShoppId(shoppId);
+         try
+         {
+            var products = _productRepository.GetAllProductsByShoppId(shoppId);
 
-         return Ok(products);
+            return Ok(products);
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+         }
+
       }
 
       [HttpPut("UpdateProduct/shoppId={shoppId},productId={productId},quantity={quantity}")]
       public ActionResult TryUpdateProduct(Guid shoppId, Guid productId, int quantity)
       {
-         var result = _productRepository.TryUpdateProduct(shoppId, productId, quantity);
-
-         if (result)
+         try
          {
-            var products = _productRepository.GetAllProductsByShoppId(shoppId);
+            var result = _productRepository.TryUpdateProduct(shoppId, productId, quantity);
 
-            decimal cost = default;
-            int quantityCount = default;
-
-            foreach (var product in products)
+            if (result)
             {
-               cost += product.Cost;
-               quantityCount += product.Quantity;
+               var products = _productRepository.GetAllProductsByShoppId(shoppId);
+
+               decimal cost = default;
+               int quantityCount = default;
+
+               foreach (var product in products)
+               {
+                  cost += product.Cost;
+                  quantityCount += product.Quantity;
+               }
+
+               _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
+
+               return Ok(result);
             }
 
-            _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
+            return Ok(result);
 
-            return Ok(result); //Рефакторинг
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
          }
 
-         return Ok(result);
       }
 
 
       [HttpDelete("DeleteProductsInShoppCart/shoppId={shoppId},productId={productId}")]
       public ActionResult DeleteProductsInShoppCart(Guid shoppId, Guid productId)
       {
-         _productRepository.DeleteProductById(productId);
-
-         if (true)
+         try
          {
-            var products = _productRepository.GetAllProductsByShoppId(shoppId);
+            _productRepository.DeleteProductById(productId);
 
-            decimal cost = default;
-            int quantityCount = default;
-
-            foreach (var product in products)
+            if (true)
             {
-               cost += product.Cost;
-               quantityCount += product.Quantity;
+               var products = _productRepository.GetAllProductsByShoppId(shoppId);
+
+               decimal cost = default;
+               int quantityCount = default;
+
+               foreach (var product in products)
+               {
+                  cost += product.Cost;
+                  quantityCount += product.Quantity;
+               }
+
+               _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
+
+               return Ok(true);
             }
 
-            _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
-
-            return Ok(true); //Рефакторинг
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
          }
 
 
@@ -188,60 +272,75 @@ namespace ShopService.Controllers
       [HttpDelete("DeleteShoppCart/shoppId={shoppId}")]
       public ActionResult DeleteShoppCart(Guid shoppId)
       {
-         _shoppingCartRepository.DeleteShoppingCart(shoppId);
-         _productRepository.DeleteProductsByShoppId(shoppId);
+         try
+         {
+            _shoppingCartRepository.DeleteShoppingCart(shoppId);
+            _productRepository.DeleteProductsByShoppId(shoppId);
 
-         return Ok();
+            return Ok();
+
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+         }
       }
 
       [HttpGet("CreateOrder/nickname={nickname}, shoppid={shoppid}")]
       public ActionResult CreateOrder(string nickname, Guid shoppId)
       {
-         _shopClient.GetResultRequestByNickname(nickname, out string result);
 
-
-         int sumProducts = default;
-         decimal cost = default;
-         string orderInfo = default;
-
-         if (bool.Parse(result) == true)
+         try
          {
-            var products = _productRepository.GetAllProductsByShoppId(shoppId);
+            int sumProducts = default;
+            decimal cost = default;
+            string orderInfo = default;
 
-            foreach (var product in products)
+            _shopClient.GetResultRequestByNickname(nickname, out string result);
+
+            if (bool.Parse(result) == true)
             {
-               if (_shopClient.BuyItem(product.ItemId, product.Quantity))
+               var products = _productRepository.GetAllProductsByShoppId(shoppId);
+
+               foreach (var product in products)
                {
-                  sumProducts += product.Quantity;
-                  cost += product.Cost;
-               }
-               else
-               {
-                  if (orderInfo == default)
+                  if (_shopClient.BuyItem(product.ItemId, product.Quantity))
                   {
-                     orderInfo = $"Нужное Вам количество товаров отсутвует на складе, данные товары не будут добавлены в ваш заказ {product.ItemId} ";
+                     sumProducts += product.Quantity;
+                     cost += product.Cost;
                   }
                   else
                   {
-                     orderInfo += $",{product.ItemId}";
+                     if (orderInfo == default)
+                     {
+                        orderInfo = $"Нужное Вам количество товаров отсутвует на складе, данные товары не будут добавлены в ваш заказ {product.ItemId} ";
+                     }
+                     else
+                     {
+                        orderInfo += $",{product.ItemId}";
+                     }
                   }
                }
+
+
+               if (orderInfo == default)
+               {
+                  orderInfo = "Все товары успешно добавлены в ваш заказ";
+               }
+
+               var order = new Order(nickname, shoppId, sumProducts, cost);
+
+               order.AddInfo(orderInfo);
+
+               return Ok(order);
             }
-
-
-            if (orderInfo == default)
-            {
-               orderInfo = "Все товары успешно добавлены в ваш заказ";
-            }
-
-            var order = new Order(nickname, shoppId, sumProducts, cost);
-            order.AddInfo(orderInfo);
-            
-            return Ok(order);
+            return Ok($"Пользователь {nickname} не зарегистрирован в магазине");
+         }
+         catch
+         {
+            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
          }
 
-
-         return Ok($"Пользователь {nickname} не зарегистрирован в магазине");
       }
 
 

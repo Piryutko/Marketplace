@@ -19,17 +19,17 @@ namespace ShopService.Models
             // PaymentStatus = false;
         }
 
-        public Guid OrderId { get; set; }
+        public Guid OrderId { get; private set;}
         
-        public string Nickname { get; set; }
+        public string Nickname { get; private set;}
         
-        public Guid ShoppId { get; set; }
+        public Guid ShoppId { get; private set;}
 
-        public int Products { get; set; }
+        public int Products { get; private set;}
 
-        public decimal Cost { get; set; }
+        public decimal Cost { get; private set;}
 
-        public string OrderInfo { get; set; }
+        public string OrderInfo { get; private set; }
 
         public string AddInfo(string message)
         {

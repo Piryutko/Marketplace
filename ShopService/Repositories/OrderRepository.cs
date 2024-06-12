@@ -17,11 +17,9 @@ namespace ShopService.Repositories
             _context = context;
         }
 
-        public Order CreateOrder(string nickname, Guid shoppId, int sumProducts, decimal amount)
+        public void CreateOrder(Order order)
         {
-            var order = new Order(nickname, shoppId, sumProducts, amount);
-
-            return order;
+           _context.Orders.Add(order);
         }
 
         public Order GetOrderById(Guid id)

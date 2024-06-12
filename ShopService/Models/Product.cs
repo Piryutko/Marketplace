@@ -21,19 +21,19 @@ namespace ShopService.Models
         }
 
         [Key]
-        public Guid ProductId { get; set; }
+        public Guid ProductId { get; private set;}
 
-        public Guid ShoppId { get; set; }
+        public Guid ShoppId { get; private set; }
 
-        public Guid ItemId { get; set; }
+        public Guid ItemId { get; private set; }
         
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
-        public decimal Cost {get; set; }
+        public decimal Cost {get; private set; }
 
-        public int Quantity { get; set; }
+        public int Quantity { get; private set; }
 
-        public decimal Price {get; set; }
+        public decimal Price { get; private set;}
 
         public void ChangeQuantity(int quantity)
         {

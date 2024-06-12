@@ -110,7 +110,7 @@ namespace ShopService.GrpcShopClient
 
         public bool CheckQuantityItem(Guid id, int quantity, out decimal cost, out string itemName)
         {
-            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client); //переименовать метод
+            var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
 
             if(isConnection)
             {
@@ -166,7 +166,7 @@ namespace ShopService.GrpcShopClient
             {
                 var request = new BuyItemsRequest() {ProductId = productId.ToString(), Quantity = quantity};
                 var response = client.BuyItems(request);
-                bool.TryParse(response.Response, out bool result); //Далее конструирую на стороне сервера response
+                bool.TryParse(response.Response, out bool result);
 
                 if(result)
                 {

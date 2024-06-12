@@ -17,11 +17,11 @@ namespace ShopService.Models
         }
 
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
-        public decimal Cost { get; set; }
+        public decimal Cost { get; private set; }
 
-        public int Quantity { get; set; }
+        public int Quantity { get; private set; }
 
 
 
