@@ -8,7 +8,7 @@ namespace ShopService.Interfaces
 {
     public interface IOrderRepository
     {
-        public void CreateOrder(Order order);
+        public Order CreateOrder(Order order);
 
         public Order GetOrderById(Guid id);
     }

@@ -211,15 +211,15 @@ namespace ShopService.Controllers
                var products = _productRepository.GetAllProductsByShoppId(shoppId);
 
                decimal cost = default;
-               int quantityCount = default;
+               int sumProducts = default;
 
                foreach (var product in products)
                {
-                  cost += product.Cost;
-                  quantityCount += product.Quantity;
+                  _productRepository.ModifySumProductValue(product.Quantity, ref sumProducts);
+                  _productRepository.ModifyCostProductValue(product.Cost, ref cost);
                }
 
-               _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
+               _shoppingCartRepository.RefreshShoppingCart(shoppId, sumProducts, cost);
 
                return Ok(result);
             }
@@ -242,20 +242,20 @@ namespace ShopService.Controllers
          {
             _productRepository.DeleteProductById(productId);
 
-            if (true)
+            if (true) // доделать*
             {
                var products = _productRepository.GetAllProductsByShoppId(shoppId);
 
                decimal cost = default;
-               int quantityCount = default;
+               int sumProducts = default;
 
-               foreach (var product in products)
+               foreach (var product in products) //перенести в метод*
                {
-                  cost += product.Cost;
-                  quantityCount += product.Quantity;
+                  _productRepository.ModifySumProductValue(product.Quantity, ref sumProducts);
+                  _productRepository.ModifyCostProductValue(product.Cost, ref cost);
                }
 
-               _shoppingCartRepository.RefreshShoppingCart(shoppId, quantityCount, cost);
+               _shoppingCartRepository.RefreshShoppingCart(shoppId, sumProducts, cost);
 
                return Ok(true);
             }
@@ -289,7 +289,6 @@ namespace ShopService.Controllers
       [HttpGet("CreateOrder/nickname={nickname}, shoppid={shoppid}")]
       public ActionResult CreateOrder(string nickname, Guid shoppId)
       {
-
          try
          {
             int sumProducts = default;
@@ -306,8 +305,8 @@ namespace ShopService.Controllers
                {
                   if (_shopClient.BuyItem(product.ItemId, product.Quantity))
                   {
-                     sumProducts += product.Quantity;
-                     cost += product.Cost;
+                     _productRepository.ModifySumProductValue(product.Quantity, ref sumProducts);
+                     _productRepository.ModifyCostProductValue(product.Cost, ref cost);
                   }
                   else
                   {
@@ -322,19 +321,21 @@ namespace ShopService.Controllers
                   }
                }
 
-
                if (orderInfo == default)
                {
                   orderInfo = "Все товары успешно добавлены в ваш заказ";
                }
 
-               var order = new Order(nickname, shoppId, sumProducts, cost);
+               var order = _orderRepository.CreateOrder(new Order(nickname, shoppId, sumProducts, cost));
 
-               order.AddInfo(orderInfo);
+               if (order != null)
+               {
+                  order.AddInfo(orderInfo);
+                  return Ok(order);
+               }
 
-               return Ok(order);
             }
-            return Ok($"Пользователь {nickname} не зарегистрирован в магазине");
+            return Ok($"Пользователь {nickname} - не зарегистрирован в магазине");
          }
          catch
          {

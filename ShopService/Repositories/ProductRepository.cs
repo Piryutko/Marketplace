@@ -59,14 +59,14 @@ namespace ShopService.Repositories
         public void DeleteProductsByShoppId(Guid id)
         {
             var products = _context.Products.Where(p => p.ShoppId == id);
-            var result = _context.Products.Except(products); // тест*
+            var result = _context.Products.Except(products);
             _context.SaveChanges();
         }
 
         public void DeleteProductById(Guid id)
         {
             var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
-            var result = _context.Products.Remove(product); //тест*
+            var result = _context.Products.Remove(product);
             _context.SaveChanges();
         }
 
@@ -75,6 +75,16 @@ namespace ShopService.Repositories
             var product = _context.Products.FirstOrDefault(p => p.ShoppId == shoppId && p.ProductId == productId);
 
             return product;
+        }
+
+        public void ModifySumProductValue(int quantity, ref int value)
+        {
+            value += quantity;
+        }
+
+        public void ModifyCostProductValue(decimal cost, ref decimal sumCost)
+        {
+            sumCost += cost;
         }
     }
 }

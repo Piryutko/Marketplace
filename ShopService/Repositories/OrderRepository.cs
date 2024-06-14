@@ -17,9 +17,16 @@ namespace ShopService.Repositories
             _context = context;
         }
 
-        public void CreateOrder(Order order)
+        public Order CreateOrder(Order order)
         {
            _context.Orders.Add(order);
+
+           if(_context.SaveChanges() > 0)
+           {
+                return order;
+           }
+           
+           return null;
         }
 
         public Order GetOrderById(Guid id)

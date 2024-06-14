@@ -21,5 +21,9 @@ namespace ShopService.Interfaces
         void DeleteProductById(Guid id);
 
         Product GetProductByShoppIdProductId(Guid shoppId, Guid productId);
+
+        void ModifySumProductValue(int quantity, ref int sumProducts);
+
+        void ModifyCostProductValue(decimal cost, ref decimal sumCost);
     }
 }
