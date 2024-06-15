@@ -16,9 +16,9 @@ namespace ShopService.Interfaces
 
         bool TryUpdateProduct(Guid shoppId, Guid productId, int quantity);
 
-        void DeleteProductsByShoppId(Guid id);
+        bool DeleteProductsByShoppId(Guid id);
 
-        void DeleteProductById(Guid id);
+        bool DeleteProductById(Guid id);
 
         Product GetProductByShoppIdProductId(Guid shoppId, Guid productId);
 

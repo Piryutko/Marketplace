@@ -52,11 +52,18 @@ namespace ShopService.Repositories
 
         }   
 
-        public void DeleteShoppingCart(Guid shoppCartId)
+        public bool DeleteShoppingCart(Guid shoppCartId)
         {
             var shoppCart = _context.ShoppingCarts.FirstOrDefault(p => p.Id == shoppCartId);
             var result = _context.ShoppingCarts.Remove(shoppCart);
             _context.SaveChanges();
+
+            if(!_context.ShoppingCarts.Any(p => p.Id == shoppCartId))
+            {
+                return true;
+            }
+            
+            return false;
         }
 
         public void RefreshShoppingCart(Guid shoppCartId, int quantity, decimal cost)

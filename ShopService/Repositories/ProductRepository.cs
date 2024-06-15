@@ -56,18 +56,37 @@ namespace ShopService.Repositories
             return false;
         }
 
-        public void DeleteProductsByShoppId(Guid id)
+        public bool DeleteProductsByShoppId(Guid id)
         {
             var products = _context.Products.Where(p => p.ShoppId == id);
             var result = _context.Products.Except(products);
+
             _context.SaveChanges();
+
+            var isDeleteProduct = _context.Products.Any(p => p.ShoppId == id);
+
+            if(!isDeleteProduct)
+            {
+                return true;
+            }
+
+            return false;
         }
 
-        public void DeleteProductById(Guid id)
+        public bool DeleteProductById(Guid id)
         {
             var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
             var result = _context.Products.Remove(product);
             _context.SaveChanges();
+
+            var isDeleteProduct = _context.Products.Any(p => p.ShoppId == id);
+
+            if(!isDeleteProduct)
+            {
+                return true;
+            }
+            
+            return false;
         }
 
         public Product GetProductByShoppIdProductId(Guid shoppId, Guid productId)

@@ -240,16 +240,16 @@ namespace ShopService.Controllers
       {
          try
          {
-            _productRepository.DeleteProductById(productId);
+           var result = _productRepository.DeleteProductById(productId);
 
-            if (true) // доделать*
+            if (result)
             {
                var products = _productRepository.GetAllProductsByShoppId(shoppId);
 
                decimal cost = default;
                int sumProducts = default;
 
-               foreach (var product in products) //перенести в метод*
+               foreach (var product in products)
                {
                   _productRepository.ModifySumProductValue(product.Quantity, ref sumProducts);
                   _productRepository.ModifyCostProductValue(product.Cost, ref cost);
@@ -257,8 +257,9 @@ namespace ShopService.Controllers
 
                _shoppingCartRepository.RefreshShoppingCart(shoppId, sumProducts, cost);
 
-               return Ok(true);
+               return Ok(result);
             }
+            return Ok(result);
 
          }
          catch
@@ -277,8 +278,13 @@ namespace ShopService.Controllers
             _shoppingCartRepository.DeleteShoppingCart(shoppId);
             _productRepository.DeleteProductsByShoppId(shoppId);
 
-            return Ok();
-
+            if(_shoppingCartRepository.DeleteShoppingCart(shoppId) && _productRepository.DeleteProductsByShoppId(shoppId))
+            {
+               return Ok(true);
+            }
+            
+            return Ok(false);
+            
          }
          catch
          {

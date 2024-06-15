@@ -16,7 +16,7 @@ namespace ShopService.Interfaces
 
          void RefreshShoppingCart(Guid shoppCartId, int quantity, decimal cost);
         
-         void DeleteShoppingCart(Guid shoppCartId);
+         bool DeleteShoppingCart(Guid shoppCartId);
 
          void SaveChanges();
     }
