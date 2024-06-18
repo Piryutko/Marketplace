@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userreg-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userregistrationservice
+  template:
+    metadata:
+      labels:
+        app: userregistrationservice
+    spec:
+      containers:
+        - name: userregistrationservice
+          image: mpiryutko/userregistrationservice:latest

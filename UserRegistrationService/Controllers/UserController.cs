@@ -68,5 +68,11 @@ namespace UserRegistrationService.Controllers
             
         }
 
+        [HttpGet]
+        public ActionResult TestMessage()
+        {
+            Console.WriteLine("HelloWorld");
+            return Ok("HelloWorld");
+        }
     }
 }
