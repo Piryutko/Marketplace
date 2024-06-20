@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: itemservice-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: itemservice
+  template:
+    metadata:
+      labels:
+        app: itemservice
+    spec:
+      containers:
+        - name: itemservice
+          image: mpiryutko/itemservice:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: itemservice-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: itemservice
+  ports:
+  - name: itemservice
+    protocol: TCP
+    port: 80
+    targetPort: 80 
+  - name: plafromgrpc
+    protocol: TCP
+    port: 666
+    targetPort: 666

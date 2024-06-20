@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: itemservice-np-srv
+spec:
+  type: NodePort
+  selector:
+    app: itemservice
+  ports:
+    - name: itemservice
+      protocol: TCP
+      port: 80
+      targetPort: 80

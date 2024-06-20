@@ -62,8 +62,9 @@ namespace ShopService.Controllers
 
             return Ok(data);
          }
-         catch
-         {
+         catch (Exception ex)
+         {  
+            Console.WriteLine($"Error - {ex.Message}");
             return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
          }
 
