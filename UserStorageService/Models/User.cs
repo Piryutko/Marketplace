@@ -7,15 +7,6 @@ namespace UserStorageService.Models
 {
     public class User
     {
-        // public User(string name, string surname, string nickname, DateTime datebirth, string email, Guid id)
-        // {
-        //     Name = name;
-        //     Surname = surname;
-        //     Nickname = nickname;
-        //     Datebirth = datebirth;
-        //     Email = email;
-        //     Id = id;
-        // }
 
         public Guid Id { get; set; }
 

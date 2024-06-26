@@ -25,6 +25,7 @@ namespace ItemService.Models
                 Cost = cost;
 
                 Quantity = quantity;
+                Ensure.That(Quantity).IsGt(0);
             }
             catch (Exception ex)
             {

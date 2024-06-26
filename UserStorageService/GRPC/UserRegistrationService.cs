@@ -16,7 +16,7 @@ namespace UserStorageService.GRPC
         {
             _repository = repository;
         }
-
+        
         public override Task<UserResponse> UserExists(UserRequest request, ServerCallContext context)
         {
             var id = Guid.Parse(request.Id);

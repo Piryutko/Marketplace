@@ -32,9 +32,9 @@ namespace UserRegistrationService.Controllers
             _userClient = userClient;
         }
         
-
-        [HttpPost("SendMessageTryCreateUser")]
-        public ActionResult CreateUser(User user)
+        //Регистрация пользователя
+        [HttpPost("UserRegistration")]
+        public ActionResult UserRegistration(User user)
         {
             try
             {
@@ -61,18 +61,12 @@ namespace UserRegistrationService.Controllers
             }
                 
             }
-            catch (Exception ex)
+            catch
             {
                  return BadRequest($"Вы не прошли регистрацию! Обратитесь в техническую поддержку магазина.");
             }
             
         }
 
-        [HttpGet]
-        public ActionResult TestMessage()
-        {
-            Console.WriteLine("HelloWorld");
-            return Ok("HelloWorld");
-        }
     }
 }
