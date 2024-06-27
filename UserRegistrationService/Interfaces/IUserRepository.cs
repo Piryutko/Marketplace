@@ -11,11 +11,9 @@ namespace UserRegistrationService.Interfaces
     {
         IEnumerable<User> GetAllUsers();
 
-        User GetUserById(Guid id); //GRPC Client
+        User GetUserById(Guid id);
 
-        // bool TryGetUserByMail(string mail, out UserMailDto userMail); //Dto
-
-        bool TryCreateUser(User user); //GRPC Client
+        bool TryCreateUser(User user);
 
         public bool SaveChange();
     }
