@@ -50,7 +50,7 @@ public class UserRegistrationServiceTest
     [TestMethod]
     [DataRow("12345","34567","SuperStar","04.04.1994 0:00:00","  ")]
     [DataRow("34567","444","ZikoZuko","01.01.2003 0:00:00","  ")]
-    public void ShouldCreateUser_ThrowFalse(string name, string surname, string nickname, string datebirth, string email)
+    public void TryCreateUser_ThrowFalse(string name, string surname, string nickname, string datebirth, string email)
     {
         //prepare
         var convertedDatebirth = Convert.ToDateTime(datebirth);
