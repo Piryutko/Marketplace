@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using UserRegistrationService.AsyncDataServices;
 using UserRegistrationService.Data;
+using UserRegistrationService.Facades;
 using UserRegistrationService.GrpcClient;
 using UserRegistrationService.Interfaces;
 using UserRegistrationService.Repositories;
@@ -42,6 +43,7 @@ namespace UserRegistrationService
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserClient, UserClient>();
+            services.AddScoped<IUserFacade, UserFacade>();
 
             services.AddSingleton<IMessageBusClient, MessageBusClient>();
 

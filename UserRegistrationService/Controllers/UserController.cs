@@ -18,54 +18,21 @@ namespace UserRegistrationService.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
-        private readonly IMessageBusClient _messageBusClient;
-        private readonly IUserClient _userClient;
 
-        public UserController(IUserRepository userRepository, IMapper mapper, 
-        IMessageBusClient messageBusClient, IUserClient userClient)
+        private readonly IUserFacade _userFacade;
+
+        public UserController(IUserFacade userFacade)
         {
-            _userRepository = userRepository;
-            _mapper = mapper;
-            _messageBusClient = messageBusClient;
-            _userClient = userClient;
+            _userFacade = userFacade;
         }
         
-        //Регистрация пользователя
-        [HttpPost("UserRegistration")]
+        
+        [HttpPost("UserRegistration")] //http://localhost:5000/api/user/UserRegistration
         public ActionResult UserRegistration(User user)
         {
-            try
-            {
-            if(_userRepository.TryCreateUser(user))
-            {
-                var userPublishedDto = _mapper.Map<UserPublishedDto>(user);
-                userPublishedDto.Event = UserEvents.User_Published;
-                _messageBusClient.PublishNewUser(userPublishedDto);
+            var result = _userFacade.TryUserRegistration(user);
 
-                
-                if(_userClient.GetResultRequestById(user.Id.ToString(), out string result))
-                {
-                    if(result == "True")
-                    {
-                        return Ok(new Response {Status = "Успешно", Message = "Вы зарегистрировались!"});
-                    }
-                }
-
-                return BadRequest("Вы не прошли регистрацию! Никнейм или почта уже занят другим пользователем");
-            }
-            else
-            {
-                return BadRequest("Вы не прошли регистрацию! Проверьте правильность вводимых данных");
-            }
-                
-            }
-            catch
-            {
-                 return BadRequest($"Вы не прошли регистрацию! Обратитесь в техническую поддержку магазина.");
-            }
-            
+            return Ok(result);
         }
 
     }
