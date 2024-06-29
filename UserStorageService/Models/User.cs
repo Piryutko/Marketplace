@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace UserStorageService.Models
 {
-    public class User
+    public sealed class User
     {
 
         public Guid Id { get; set; }

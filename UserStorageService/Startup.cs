@@ -17,6 +17,7 @@ using Microsoft.OpenApi.Models;
 using UserStorageService.AsyncDataServices;
 using UserStorageService.Data;
 using UserStorageService.Event;
+using UserStorageService.Facades;
 using UserStorageService.GRPC;
 using UserStorageService.Interfaces;
 using UserStorageService.Repositories;
@@ -48,6 +49,8 @@ namespace UserStorageService
 
             services.AddSingleton<IEventProcessor, EventProcessor>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserFacade, UserFacade>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "UserStorageService", Version = "v1" });

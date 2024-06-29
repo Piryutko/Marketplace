@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace UserRegistrationService.Models
 {
-    public class Response
+    public sealed class Response
     {
         public string Status { get; set; }
         public string Message { get; set; }

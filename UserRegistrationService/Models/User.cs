@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace UserRegistrationService.Models
 {
-    public class User
+    public sealed class User
     {
 
         public User(string name, string surname, string nickname, DateTime datebirth, string email)

@@ -14,76 +14,47 @@ namespace UserStorageService.Controllers
     [Route("api/[controller]")]
     public class UserStorageController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
+        private readonly IUserFacade _userFacade;
 
-        public UserStorageController(IUserRepository userRepository, IMapper mapper)
+        public UserStorageController(IUserFacade userFacade)
         {
-            _userRepository = userRepository;
-            _mapper = mapper;
-        }
-
-        [HttpGet]
-        public IActionResult GetMessage()
-        {
-            return Ok("Успешно подключились");
+            _userFacade = userFacade;
         }
 
         [HttpGet("GetAllUsers")]
         public IEnumerable<User> GetAllUsers()
         {
-            return _userRepository.GetAllUsers();
+            return _userFacade.GetAllUsers();
         }
 
         [HttpGet("UserExists/{id}")]
-        public bool UserExists(Guid id)
+        public bool UserExists(Guid Id)
         {
-            return _userRepository.UserExists(id);
+            return _userFacade.UserExists(Id);
         }
 
         [HttpGet("GetUserByNickname/{Nickname}")]
         public User GetUserByNickname(string Nickname)
         {
-           var result = _userRepository.TryFindUserByNickName(Nickname, out User user);
-
-           if(result != null)
-           {
-                return user;
-           }
-
-           return user;
+           return _userFacade.GetUserByNickname(Nickname);
         }
 
         [HttpGet("GetUserByEmail/{Email}")]
         public User GetUserByEmail(string Email)
         {
-           var result = _userRepository.TryFindUserByEmail(Email, out User user);
-
-           if(result != null)
-           {
-                return user;
-           }
-
-           return user;
+            return _userFacade.GetUserByEmail(Email);
         }
 
         [HttpGet("GetUserById/{id}")]
         public User GetUserById(Guid Id)
         {
-           var result = _userRepository.TryFindUserById(Id, out User user);
-
-           if(result != null)
-           {
-                return user;
-           }
-
-           return user;
+           return _userFacade.GetUserById(Id);
         }
 
         [HttpGet("DeleteUserById/{id}")]
-        public bool DeleteUserById(Guid Id)
+        public bool TryDeleteUserById(Guid Id)
         {
-           return _userRepository.TryDeleteUserById(Id);
+           return _userFacade.TryDeleteUserById(Id);
         }
 
 
