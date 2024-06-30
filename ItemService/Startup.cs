@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ItemService.Data;
+using ItemService.Facades;
 using ItemService.GRPC;
 using ItemService.Interfaces;
 using ItemService.Repository;
@@ -36,6 +37,7 @@ namespace ItemService
 
             services.AddControllers();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IItemFacade, ItemFacade>();
             services.AddGrpc();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

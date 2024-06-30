@@ -13,51 +13,47 @@ namespace ItemService.Controllers
     [Route("api/[controller]")]
     public class ItemController : ControllerBase
     {
-        private readonly IItemRepository _itemRepository;
+        private readonly IItemFacade _itemFacade;
 
-        public ItemController(IItemRepository itemRepository)
+        public ItemController(IItemFacade itemFacade)
         {
-            _itemRepository = itemRepository;
+            _itemFacade = itemFacade;
         }
 
         [HttpPost("TryAddItem")]
         public ActionResult TryAddItem(Item item)
         {
-           if(_itemRepository.TryAddItem(item))
-           {
-            return Ok(true);
-           }
-           return BadRequest(false);
+           return Ok(_itemFacade.TryAddItem(item));
         }
 
         [HttpGet("GetItemsByCategory")]
         public ActionResult GetItemsByCategory(Category category)
         {
-            return Ok(_itemRepository.GetItemsByCategory(category));
+            return Ok(_itemFacade.GetItemsByCategory(category));
         }
 
         [HttpGet("GetItemsSortByCost")] 
         public ActionResult GetItemsSortByCost(Category category)
         {
-            return Ok(_itemRepository.GetItemsCategorySortByCost(category));
+            return Ok(_itemFacade.GetItemsCategorySortByCost(category));
         }
 
         [HttpGet("GetItemsCategorySortByCostDescending")] 
         public ActionResult GetItemsCategorySortByCostDescending(Category category)
         {
-            return Ok(_itemRepository.GetItemsCategorySortByCostDescending(category));
+            return Ok(_itemFacade.GetItemsCategorySortByCostDescending(category));
         }
 
         [HttpDelete("TryDeleteItem/{id}")]
         public ActionResult TryDeleteItem(Guid id)
         {
-            return Ok(_itemRepository.TryDeleteItem(id));
+            return Ok(_itemFacade.TryDeleteItem(id));
         }
 
         [HttpPut("CheckQuantityItem/{id},{value}")] 
         public ActionResult CheckQuantityItem(Guid id,int value)
         {
-            return Ok(_itemRepository.CheckQuantityItem(id,value));
+            return Ok(_itemFacade.CheckQuantityItem(id,value));
         }
 
 
