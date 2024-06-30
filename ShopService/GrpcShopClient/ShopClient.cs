@@ -30,12 +30,12 @@ namespace ShopService.GrpcShopClient
 
             if (isConnection)
             {
-                var request = new ShopRequest() {Nickname = nickname};
+                var request = new ShopRequest() { Nickname = nickname };
 
                 var targetUser = client.CheckingUserByNickname(request);
 
                 result = targetUser.Result;
-                
+
                 return true;
             }
             else
@@ -51,7 +51,7 @@ namespace ShopService.GrpcShopClient
 
             if (isConnection)
             {
-                var request = new GetItemsByCategoryRequest(){CategoryId = categoryId};
+                var request = new GetItemsByCategoryRequest() { CategoryId = categoryId };
 
                 var itemsResponse = client.GetItemsByCategory(request);
 
@@ -72,7 +72,7 @@ namespace ShopService.GrpcShopClient
 
             if (isConnection)
             {
-                var request = new GetItemsByCategoryRequest(){CategoryId = categoryId};
+                var request = new GetItemsByCategoryRequest() { CategoryId = categoryId };
 
                 var itemsResponse = client.GetItemsCategorySortByCost(request);
 
@@ -82,8 +82,9 @@ namespace ShopService.GrpcShopClient
             }
             else
             {
-                var testList = new List<Item>();
-                return testList;
+                var emptyData = new List<Item>();
+
+                return emptyData;
             }
         }
 
@@ -93,7 +94,7 @@ namespace ShopService.GrpcShopClient
 
             if (isConnection)
             {
-                var request = new GetItemsByCategoryRequest(){CategoryId = categoryId};
+                var request = new GetItemsByCategoryRequest() { CategoryId = categoryId };
 
                 var itemsResponse = client.GetItemsCategorySortByCostDescending(request);
 
@@ -112,21 +113,21 @@ namespace ShopService.GrpcShopClient
         {
             var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
 
-            if(isConnection)
+            if (isConnection)
             {
-                var request = new CheckQuantityItemRequest(){ItemsId = id.ToString(), Quantity = quantity};
+                var request = new CheckQuantityItemRequest() { ItemsId = id.ToString(), Quantity = quantity };
 
                 var result = client.CheckQuantityItem(request);
 
                 bool.TryParse(result.Result, out bool response);
 
-                if(response == true)
+                if (response == true)
                 {
                     cost = Decimal.Parse(result.Cost);
                     itemName = result.ItemName;
                     return response;
                 }
-                
+
             }
             cost = default;
             itemName = default;
@@ -137,21 +138,21 @@ namespace ShopService.GrpcShopClient
         {
             var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
 
-            if(isConnection)
+            if (isConnection)
             {
-                var request = new TryAddItemInShoppCartRequest(){ItemsId = Itemid.ToString(), Quantity = quantity};
+                var request = new TryAddItemInShoppCartRequest() { ItemsId = Itemid.ToString(), Quantity = quantity };
 
                 var result = client.TryAddItemInShoppCart(request);
 
                 bool.TryParse(result.Result, out bool response);
 
-                if(response == true)
+                if (response == true)
                 {
                     cost = Decimal.Parse(result.Cost);
                     itemName = result.ItemName;
                     return response;
                 }
-                
+
             }
             cost = default;
             itemName = default;
@@ -162,13 +163,13 @@ namespace ShopService.GrpcShopClient
         {
             var isConnection = TryConnectionItemServer(out GrpcUserService.GrpcUserServiceClient client);
 
-            if(isConnection)
+            if (isConnection)
             {
-                var request = new BuyItemsRequest() {ProductId = productId.ToString(), Quantity = quantity};
+                var request = new BuyItemsRequest() { ProductId = productId.ToString(), Quantity = quantity };
                 var response = client.BuyItems(request);
                 bool.TryParse(response.Response, out bool result);
 
-                if(result)
+                if (result)
                 {
                     return true;
                 }
@@ -181,15 +182,15 @@ namespace ShopService.GrpcShopClient
         {
             try
             {
-            var channel = GrpcChannel.ForAddress(_configuration["GrpcStorageServer"]);
-            client = new GrpcUserService.GrpcUserServiceClient(channel);  
-            return true;
+                var channel = GrpcChannel.ForAddress(_configuration["GrpcStorageServer"]);
+                client = new GrpcUserService.GrpcUserServiceClient(channel);
+                return true;
             }
             catch (Exception ex)
             {
-            Console.WriteLine($"Error - {ex.Message}");
-            client = null;
-            return false;
+                Console.WriteLine($"Error - {ex.Message}");
+                client = null;
+                return false;
             }
         }
 
@@ -197,15 +198,15 @@ namespace ShopService.GrpcShopClient
         {
             try
             {
-            var channel = GrpcChannel.ForAddress(_configuration["GrpcItemServer"]);
-            client = new GrpcUserService.GrpcUserServiceClient(channel);  
-            return true;
+                var channel = GrpcChannel.ForAddress(_configuration["GrpcItemServer"]);
+                client = new GrpcUserService.GrpcUserServiceClient(channel);
+                return true;
             }
             catch (Exception ex)
             {
-            Console.WriteLine($"Error - {ex.Message}");
-            client = null;
-            return false;
+                Console.WriteLine($"Error - {ex.Message}");
+                client = null;
+                return false;
             }
         }
 

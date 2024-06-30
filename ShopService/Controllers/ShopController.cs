@@ -14,76 +14,45 @@ namespace ShopService.Controllers
    public class ShopController : ControllerBase
    {
       private readonly IShopClient _shopClient;
-      private IShoppingCartRepository _shoppingCartRepository;
-      private IProductRepository _productRepository;
+      private readonly IShoppingCartRepository _shoppingCartRepository;
+      private readonly IProductRepository _productRepository;
+      private readonly IOrderRepository _orderRepository;
 
-      private IOrderRepository _orderRepository;
+      private readonly IShopFacade _shopFacade;
 
       private const string MESSAGE_ERROR = "Возникла ошибка, обратитесь в службу поддержки";
       private const string STATUS_ERROR = "Ошибка";
 
-      public ShopController(IShopClient shopClient, IItemRepository itemRepository,
-       IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository, IOrderRepository orderRepository)
+      public ShopController(IShopClient shopClient,
+       IShoppingCartRepository shoppingCartRepository,
+       IProductRepository productRepository,
+       IOrderRepository orderRepository,
+       IShopFacade shopFacade)
       {
          _shopClient = shopClient;
          _shoppingCartRepository = shoppingCartRepository;
          _productRepository = productRepository;
          _orderRepository = orderRepository;
+         _shopFacade = shopFacade;
       }
 
       [HttpGet("CheckNickname/{name}")]
       public ActionResult CheckNickname(string name)
       {
-         try
-         {
-            var response = _shopClient.GetResultRequestByNickname(name, out string result);
-
-            if (response == true)
-            {
-               return Ok(result);
-            }
-
-            return BadRequest();
-
-         }
-         catch
-         {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
-         }
-
+         return Ok(_shopFacade.CheckNickname(name));
       }
 
       [HttpGet("GettAllItems")]
       public ActionResult<IEnumerable<Item>> GetAllItems(int idCategory)
       {
-         try
-         {
-            var data = _shopClient.GetItemsByCategory(idCategory);
-
-            return Ok(data);
-         }
-         catch (Exception ex)
-         {  
-            Console.WriteLine($"Error - {ex.Message}");
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
-         }
+         return Ok(_shopFacade.GetItemsByCategory(idCategory));
 
       }
 
       [HttpGet("GetItemsCategorySortByCost")]
-      public ActionResult<IEnumerable<Item>> GetItemsCategorySortByCost(int idCategory)
+      public ActionResult<IEnumerable<Item>> GetItemsCategorySortByCost(int categoryId)
       {
-         try
-         {
-            var data = _shopClient.GetItemsCategorySortByCost(idCategory);
-
-            return Ok(data);
-
-         }
-         catch
-         {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
-         }
+         return Ok(_shopFacade.GetItemsCategorySortByCost(categoryId));
       }
 
       [HttpGet("GetItemsCategorySortByCostDescending")]
@@ -241,7 +210,7 @@ namespace ShopService.Controllers
       {
          try
          {
-           var result = _productRepository.DeleteProductById(productId);
+            var result = _productRepository.DeleteProductById(productId);
 
             if (result)
             {
@@ -279,13 +248,13 @@ namespace ShopService.Controllers
             _shoppingCartRepository.DeleteShoppingCart(shoppId);
             _productRepository.DeleteProductsByShoppId(shoppId);
 
-            if(_shoppingCartRepository.DeleteShoppingCart(shoppId) && _productRepository.DeleteProductsByShoppId(shoppId))
+            if (_shoppingCartRepository.DeleteShoppingCart(shoppId) && _productRepository.DeleteProductsByShoppId(shoppId))
             {
                return Ok(true);
             }
-            
+
             return Ok(false);
-            
+
          }
          catch
          {

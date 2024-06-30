@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ShopService.Data;
+using ShopService.Facades;
 using ShopService.GrpcShopClient;
 using ShopService.Interfaces;
 using ShopService.Repositories;
@@ -33,15 +34,16 @@ namespace ShopService
         {
             services.AddDbContext<AppDbContext>(opt =>
              opt.UseInMemoryDatabase("InMem"));
-            
+
             services.AddScoped<IShopClient, ShopClient>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IShopFacade, ShopFacade>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
