@@ -11,23 +11,22 @@ namespace ShopService.Models
         public Order(string nickname, Guid shoppId, int products, decimal cost)
         {
             Nickname = nickname;
-            ShoppId = shoppId;
             Products = products;
             Cost = cost;
             OrderId = Guid.NewGuid();
-            
+            ShoppId = shoppId;
             // PaymentStatus = false;
         }
 
-        public Guid OrderId { get; private set;}
-        
-        public string Nickname { get; private set;}
-        
-        public Guid ShoppId { get; private set;}
+        public Guid OrderId { get; private set; }
 
-        public int Products { get; private set;}
+        public string Nickname { get; private set; }
 
-        public decimal Cost { get; private set;}
+        public Guid ShoppId { get; private set; }
+
+        public int Products { get; private set; }
+
+        public decimal Cost { get; private set; }
 
         public string OrderInfo { get; private set; }
 

@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ShopService.Exceptions;
 using ShopService.Interfaces;
 using ShopService.Models;
-using ShopService.Repositories;
 
 namespace ShopService.Controllers
 {
@@ -13,311 +11,211 @@ namespace ShopService.Controllers
    [Route("api/[controller]")]
    public class ShopController : ControllerBase
    {
-      private readonly IShopClient _shopClient;
-      private readonly IShoppingCartRepository _shoppingCartRepository;
-      private readonly IProductRepository _productRepository;
-      private readonly IOrderRepository _orderRepository;
-
       private readonly IShopFacade _shopFacade;
 
-      private const string MESSAGE_ERROR = "Возникла ошибка, обратитесь в службу поддержки";
-      private const string STATUS_ERROR = "Ошибка";
-
-      public ShopController(IShopClient shopClient,
-       IShoppingCartRepository shoppingCartRepository,
-       IProductRepository productRepository,
-       IOrderRepository orderRepository,
-       IShopFacade shopFacade)
+      public ShopController(IShopFacade shopFacade)
       {
-         _shopClient = shopClient;
-         _shoppingCartRepository = shoppingCartRepository;
-         _productRepository = productRepository;
-         _orderRepository = orderRepository;
          _shopFacade = shopFacade;
       }
 
-      [HttpGet("CheckNickname/{name}")]
+      [HttpGet("CheckNickname/{name}")] //http://localhost:7000/api/shop/CheckNickname/
       public ActionResult CheckNickname(string name)
       {
-         return Ok(_shopFacade.CheckNickname(name));
+         try
+         {
+            var result = _shopFacade.CheckNickname(name);
+            return Ok(result);
+         }
+         catch (UserNotFoundException)
+         {
+            return NotFound();
+         }
+         catch (GrpcServerUnavailableException)
+         {
+            return BadRequest();
+         }
       }
 
-      [HttpGet("GettAllItems")]
-      public ActionResult<IEnumerable<Item>> GetAllItems(int idCategory)
+      [HttpGet("GetItemsByCategory")] //http://localhost:7000/api/shop/GetItemsByCategory?Idcategory=
+      public ActionResult<IEnumerable<Item>> GetItemsByCategory(int idCategory)
       {
-         return Ok(_shopFacade.GetItemsByCategory(idCategory));
-
+         try
+         {
+            var result = _shopFacade.GetItemsByCategory(idCategory);
+            return Ok(result);
+         }
+         catch (CategoryNotFoundException)
+         {
+            return NotFound();
+         }
+         catch (GrpcServerUnavailableException)
+         {
+            return BadRequest();
+         }
       }
 
-      [HttpGet("GetItemsCategorySortByCost")]
+      [HttpGet("GetItemsCategorySortByCost")] //localhost:7000/api/shop/GetItemsCategorySortByCost?Idcategory=
       public ActionResult<IEnumerable<Item>> GetItemsCategorySortByCost(int categoryId)
       {
-         return Ok(_shopFacade.GetItemsCategorySortByCost(categoryId));
+         try
+         {
+            var result = _shopFacade.GetItemsCategorySortByCost(categoryId);
+            return Ok(result);
+         }
+         catch (GrpcServerUnavailableException)
+         {
+            return NotFound();
+         }
       }
 
-      [HttpGet("GetItemsCategorySortByCostDescending")]
-      public ActionResult<IEnumerable<Item>> GetItemsCategorySortByCostDescending(int idCategory)
+      [HttpGet("GetItemsCategorySortByCostDescending")] //http://localhost:7000/api/shop/GetItemsCategorySortByCostDescending?Idcategory=
+      public ActionResult<IEnumerable<Item>> GetItemsCategorySortByCostDescending(int categoryId)
       {
          try
          {
-            var data = _shopClient.GetItemsCategorySortByCostDescending(idCategory);
-
-            return Ok(data);
+            var result = _shopFacade.GetItemsCategorySortByCostDescending(categoryId);
+            return Ok(result);
          }
-         catch
+         catch (CategoryNotFoundException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return NotFound();
+         }
+         catch (GrpcServerUnavailableException)
+         {
+            return BadRequest();
          }
 
       }
 
-      [HttpPost("TryAddItemInNewShoppCart/{itemId},{quantity}")]
-      public ActionResult TryAddItemInNewShoppCart(Guid itemId, int quantity)
+      [HttpPost("CreateShoppCart/{itemId},{quantity}")] //http://localhost:7000/api/Shop/CreateShoppCart/{itemId},{quantity}
+      public ActionResult CreateShoppCart(Guid itemId, int quantity)
       {
          try
          {
-            var data = _shopClient.TryAddItemInShoppCart(itemId, quantity, out decimal cost, out string itemName);
-
-            if (data)
-            {
-               var shoppId = _shoppingCartRepository.CreateShoppingCart();
-
-               var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost, quantity);
-
-               var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
-
-               var itemtest = _shoppingCartRepository.GetShoppingCartById(shoppId);
-
-               switch (result)
-               {
-                  case true:
-                     return Ok
-                  (new Response { Message = $"Индентификатор корзины - {shoppId}", Status = result.ToString() });
-                  case false:
-                     return Ok
-                  (new Response { Status = result.ToString() });
-               }
-            }
-
-            return Ok(data);
-
+            var result = _shopFacade.CreateShoppCart(itemId, quantity);
+            return Ok(result);
          }
-         catch
+         catch (ItemNotFoundException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return BadRequest();
          }
-
+         catch (GrpcServerUnavailableException)
+         {
+            return NotFound();
+         }
       }
 
-      [HttpPut("UpdateShoppingCart/shoppId={shoppId},itemId={itemId},quantity={quantity}")]
+      [HttpPut("UpdateShoppingCart/shoppId={shoppId},itemId={itemId},quantity={quantity}")] //http://localhost:7000/api/Shop/UpdateShoppingCart/shoppId={shoppId},itemId={itemId},quantity={quantity}
       public ActionResult UpdateShoppingCart(Guid shoppId, Guid itemId, int quantity)
       {
          try
          {
-            var data = _shopClient.CheckQuantityItem(itemId, quantity, out decimal cost, out string itemName);
-
-            if (data)
-            {
-               var productId = _productRepository.CreateProduct(shoppId, itemId, itemName, cost, quantity);
-
-               var result = _shoppingCartRepository.UpdateShoppingCart(shoppId, cost * quantity, quantity);
-
-               if (result)
-               {
-                  return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
-               }
-
-               return Ok(result);
-            }
-
-            return Ok(data);
-
+            var result = _shopFacade.UpdateShoppingCart(shoppId, itemId, quantity);
+            return Ok(result);
          }
-         catch
+         catch (GrpcServerUnavailableException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return BadRequest();
          }
-
       }
 
-      [HttpGet("GetShoppingCartById/{shoppId}")]
+      [HttpGet("GetShoppingCartById/{shoppId}")] //http://localhost:7000/api/Shop/GetShoppingCartById/{shoppId}
       public ActionResult GetShoppingCartById(Guid shoppId)
       {
          try
          {
-            return Ok(_shoppingCartRepository.GetShoppingCartById(shoppId));
+            var result = _shopFacade.GetShoppingCartById(shoppId);
+            return Ok(result);
          }
-         catch
+         catch (ShoppingCartNotFoundException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return NotFound();
+         }
+         catch (GrpcServerUnavailableException)
+         {
+            return BadRequest();
          }
       }
 
-      [HttpGet("GetAllProductsByShoppId/{shoppId}")]
+      [HttpGet("GetAllProductsByShoppId/{shoppId}")] //http://localhost:7000/api/Shop/GetAllProductsByShoppId/{shoppId}
       public ActionResult GetAllProductsByShoppId(Guid shoppId)
       {
          try
          {
-            var products = _productRepository.GetAllProductsByShoppId(shoppId);
-
-            return Ok(products);
+            var result = _shopFacade.GetAllProductsByShoppId(shoppId);
+            return Ok(result);
          }
-         catch
+         catch (ShoppingCartNotFoundException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return NotFound();
          }
-
+         catch (GrpcServerUnavailableException)
+         {
+            return BadRequest();
+         }
       }
 
-      [HttpPut("UpdateProduct/shoppId={shoppId},productId={productId},quantity={quantity}")]
+      [HttpPut("UpdateProduct/shoppId={shoppId},productId={productId},quantity={quantity}")] //http://localhost:7000/api/Shop/UpdateProduct/shoppId={shoppId},productId={productId},quantity={quantity}
       public ActionResult TryUpdateProduct(Guid shoppId, Guid productId, int quantity)
       {
          try
          {
-            var result = _productRepository.TryUpdateProduct(shoppId, productId, quantity);
-
-            if (result)
-            {
-               var products = _productRepository.GetAllProductsByShoppId(shoppId);
-
-               decimal cost = default;
-               int sumProducts = default;
-
-               foreach (var product in products)
-               {
-                  _productRepository.ModifySumProductValue(product.Quantity, ref sumProducts);
-                  _productRepository.ModifyCostProductValue(product.Cost, ref cost);
-               }
-
-               _shoppingCartRepository.RefreshShoppingCart(shoppId, sumProducts, cost);
-
-               return Ok(result);
-            }
-
+            var result = _shopFacade.TryUpdateProduct(shoppId, productId, quantity);
             return Ok(result);
-
          }
-         catch
+         catch (GrpcServerUnavailableException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return BadRequest();
          }
-
       }
 
 
-      [HttpDelete("DeleteProductsInShoppCart/shoppId={shoppId},productId={productId}")]
+      [HttpDelete("DeleteProductsInShoppCart/shoppId={shoppId},productId={productId}")] //http://localhost:7000/api/Shop/DeleteProductsInShoppCart/shoppId={shoppId},productId={productId}
       public ActionResult DeleteProductsInShoppCart(Guid shoppId, Guid productId)
       {
          try
          {
-            var result = _productRepository.DeleteProductById(productId);
-
-            if (result)
-            {
-               var products = _productRepository.GetAllProductsByShoppId(shoppId);
-
-               decimal cost = default;
-               int sumProducts = default;
-
-               foreach (var product in products)
-               {
-                  _productRepository.ModifySumProductValue(product.Quantity, ref sumProducts);
-                  _productRepository.ModifyCostProductValue(product.Cost, ref cost);
-               }
-
-               _shoppingCartRepository.RefreshShoppingCart(shoppId, sumProducts, cost);
-
-               return Ok(result);
-            }
+            var result = _shopFacade.DeleteProductById(shoppId, productId);
             return Ok(result);
 
          }
-         catch
+         catch (GrpcServerUnavailableException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return BadRequest();
          }
-
-
       }
 
-      [HttpDelete("DeleteShoppCart/shoppId={shoppId}")]
+      [HttpDelete("DeleteShoppCart/shoppId={shoppId}")] //http://localhost:7000/api/Shop/DeleteShoppCart/shoppId={shoppId}
       public ActionResult DeleteShoppCart(Guid shoppId)
       {
          try
          {
-            _shoppingCartRepository.DeleteShoppingCart(shoppId);
-            _productRepository.DeleteProductsByShoppId(shoppId);
-
-            if (_shoppingCartRepository.DeleteShoppingCart(shoppId) && _productRepository.DeleteProductsByShoppId(shoppId))
-            {
-               return Ok(true);
-            }
-
-            return Ok(false);
+            var result = _shopFacade.DeleteShoppCart(shoppId);
+            return Ok(result);
 
          }
-         catch
+         catch (GrpcServerUnavailableException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return BadRequest();
          }
       }
 
-      [HttpGet("CreateOrder/nickname={nickname}, shoppid={shoppid}")]
+      [HttpGet("CreateOrder/nickname={nickname},shoppid={shoppid}")] //http://localhost:7000/api/Shop/CreateOrder/nickname={nickname},shoppid={shoppid}
       public ActionResult CreateOrder(string nickname, Guid shoppId)
       {
          try
          {
-            int sumProducts = default;
-            decimal cost = default;
-            string orderInfo = default;
-
-            _shopClient.GetResultRequestByNickname(nickname, out string result);
-
-            if (bool.Parse(result) == true)
-            {
-               var products = _productRepository.GetAllProductsByShoppId(shoppId);
-
-               foreach (var product in products)
-               {
-                  if (_shopClient.BuyItem(product.ItemId, product.Quantity))
-                  {
-                     _productRepository.ModifySumProductValue(product.Quantity, ref sumProducts);
-                     _productRepository.ModifyCostProductValue(product.Cost, ref cost);
-                  }
-                  else
-                  {
-                     if (orderInfo == default)
-                     {
-                        orderInfo = $"Нужное Вам количество товаров отсутвует на складе, данные товары не будут добавлены в ваш заказ {product.ItemId} ";
-                     }
-                     else
-                     {
-                        orderInfo += $",{product.ItemId}";
-                     }
-                  }
-               }
-
-               if (orderInfo == default)
-               {
-                  orderInfo = "Все товары успешно добавлены в ваш заказ";
-               }
-
-               var order = _orderRepository.CreateOrder(new Order(nickname, shoppId, sumProducts, cost));
-
-               if (order != null)
-               {
-                  order.AddInfo(orderInfo);
-                  return Ok(order);
-               }
-
-            }
-            return Ok($"Пользователь {nickname} - не зарегистрирован в магазине");
+            var result = _shopFacade.CreateOrder(nickname, shoppId);
+            return Ok(result);
          }
-         catch
+         catch (UserNotFoundException)
          {
-            return BadRequest(new Response() { Message = MESSAGE_ERROR, Status = STATUS_ERROR });
+            return NotFound();
          }
-
+         catch (GrpcServerUnavailableException)
+         {
+            return BadRequest();
+         }
       }
 
 
