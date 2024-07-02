@@ -11,6 +11,7 @@ using AutoMapper;
 using UserRegistrationService.Dtos;
 using UserRegistrationService.Enums;
 using Grpc.Net.Client;
+using UserRegistrationService.Exceptions;
 
 namespace UserRegistrationService.Controllers
 {
@@ -25,14 +26,21 @@ namespace UserRegistrationService.Controllers
         {
             _userFacade = userFacade;
         }
-        
-        
+
+
         [HttpPost("UserRegistration")] //http://localhost:5000/api/user/UserRegistration
         public ActionResult UserRegistration(User user)
         {
-            var result = _userFacade.TryUserRegistration(user);
+            try
+            {
+                var result = _userFacade.TryUserRegistration(user);
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (GrpcServerUnavailableException)
+            {
+                return BadRequest();
+            }
         }
 
     }

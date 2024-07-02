@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Grpc.Core;
 using UserRegistrationService.Dtos;
 using UserRegistrationService.Enums;
+using UserRegistrationService.Exceptions;
 using UserRegistrationService.Interfaces;
 using UserRegistrationService.Models;
 using UserRegistrationService.Repositories;
@@ -31,32 +33,32 @@ namespace UserRegistrationService.Facades
         {
             try
             {
-            if(_userRepository.TryCreateUser(user))
-            {
-                var userPublishedDto = _mapper.Map<UserPublishedDto>(user);
-                userPublishedDto.Event = UserEvents.User_Published;
-                _messageBusClient.PublishNewUser(userPublishedDto);
-
-                
-                if(_userClient.GetResultRequestById(user.Id.ToString(), out string result))
+                if (_userRepository.TryCreateUser(user))
                 {
-                    if(result == "True")
+                    var userPublishedDto = _mapper.Map<UserPublishedDto>(user);
+                    userPublishedDto.Event = UserEvents.User_Published;
+                    _messageBusClient.PublishNewUser(userPublishedDto);
+
+
+                    if (_userClient.GetResultRequestById(user.Id.ToString(), out string result))
                     {
-                        return new Response { Status = "Success", Message = "Вы зарегистрировались!"};
+                        if (result == "True")
+                        {
+                            return new Response { Status = "Success", Message = "Вы зарегистрировались!" };
+                        }
                     }
+
+                    return new Response { Status = "Fail", Message = "Никнейм или почта уже занят другим пользователем" };
+                }
+                else
+                {
+                    return new Response { Status = "Fail", Message = "Проверьте правильность вводимых данных" };
                 }
 
-                return new Response{ Status = "Fail", Message = "Никнейм или почта уже занят другим пользователем"};
             }
-            else
+            catch (RpcException)
             {
-                return new Response{ Status = "Fail", Message = "Проверьте правильность вводимых данных"};
-            }
-                
-            }
-            catch
-            {
-                return new Response{ Status = "Fail", Message = "Обратитесь в техническую поддержку магазина"};
+                throw new GrpcServerUnavailableException();
             }
         }
 
