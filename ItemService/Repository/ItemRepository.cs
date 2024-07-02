@@ -28,7 +28,7 @@ namespace ItemService.Repository
                 result = CheckQuantityById(item.Id, value);
                 _context.SaveChanges();
             }
-            
+
             return result;
         }
 
@@ -36,7 +36,7 @@ namespace ItemService.Repository
         {
             var item = _context.Items.FirstOrDefault(i => i.Id == id);
 
-            if(item != null && item.GetQuantity() >= value && item.GetQuantity() >= 0)
+            if (item != null && item.GetQuantity() >= value && item.GetQuantity() >= 0)
             {
                 return true;
             }
@@ -71,14 +71,14 @@ namespace ItemService.Repository
         {
             try
             {
-            _context.Items.Add(item);
-            _context.SaveChanges();
-            return true;
+                _context.Items.Add(item);
+                _context.SaveChanges();
+                return true;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-            Console.WriteLine(ex.Message);
-            return false;
+                Console.WriteLine(ex.Message);
+                return false;
             }
         }
 
@@ -86,7 +86,7 @@ namespace ItemService.Repository
         {
             var result = _context.Items.Any(i => i.Id == id);
 
-            if(result == true)
+            if (result == true)
             {
                 var item = _context.Items.FirstOrDefault(i => i.Id == id);
 
@@ -109,11 +109,11 @@ namespace ItemService.Repository
             var checkItem = CheckQuantityById(item.Id, value);
             var currentQuantity = item.Quantity;
 
-            if(checkItem)
+            if (checkItem)
             {
                 item.ChangeQuantity(value);
                 _context.SaveChanges();
-                
+
                 return true;
             }
             return false;

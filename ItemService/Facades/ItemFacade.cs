@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ItemService.Enums;
+using ItemService.Exceptions;
 using ItemService.Interfaces;
 using ItemService.Models;
+using Microsoft.Extensions.FileProviders;
 
 namespace ItemService.Facades
 {
@@ -19,22 +21,25 @@ namespace ItemService.Facades
 
         public bool CheckQuantityItem(Guid id, int value)
         {
-            return _itemRepository.CheckQuantityItem(id,value);
+            return _itemRepository.CheckQuantityItem(id, value);
         }
 
         public IList<Item> GetItemsByCategory(Category category)
         {
-            return _itemRepository.GetItemsByCategory(category);
+            var result = _itemRepository.GetItemsByCategory(category);
+            return result.Any() ? result : throw new CategoryNotFoundException();
         }
 
         public IEnumerable<Item> GetItemsCategorySortByCost(Category category)
         {
-            return _itemRepository.GetItemsCategorySortByCost(category);
+            var result = _itemRepository.GetItemsByCategory(category);
+            return result.Any() ? result : throw new CategoryNotFoundException();
         }
 
         public IEnumerable<Item> GetItemsCategorySortByCostDescending(Category category)
         {
-            return _itemRepository.GetItemsCategorySortByCostDescending(category);
+            var result = _itemRepository.GetItemsCategorySortByCostDescending(category);
+            return result.Any() ? result : throw new CategoryNotFoundException();
         }
 
         public bool TryAddItem(Item item)
