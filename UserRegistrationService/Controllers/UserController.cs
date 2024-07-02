@@ -41,6 +41,10 @@ namespace UserRegistrationService.Controllers
             {
                 return BadRequest();
             }
+            catch (NullReferenceException)
+            {
+                return BadRequest();
+            }
         }
 
     }

@@ -60,6 +60,10 @@ namespace UserRegistrationService.Facades
             {
                 throw new GrpcServerUnavailableException();
             }
+            catch (NullReferenceException)
+            {
+                throw new NullReferenceException();
+            }
         }
 
     }
